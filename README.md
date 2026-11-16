@@ -21,36 +21,27 @@ Owner and author: **Katie Clarkson**. Questions go to Katie or any AI Exchange a
 2. Near the top right of the file, click the **download** button (⬇). When you hover over it, it says "Download raw file".
 3. The file lands in your **Downloads** folder.
 
-## Step 2: Give it to Claude
+## Step 2: Drop it into Claude
 
-**Already using Claude Code?** That means the **Code** tab in the Claude desktop app, or the Claude Code extension in VS Code.
+1. Open Claude: the Claude app, [claude.ai](https://claude.ai), or Claude Code if you already use it.
+2. Drag **SKILL.md** from your Downloads folder and drop it into the message box.
+3. Press **Return**.
 
-1. Open Claude Code.
-2. Copy this line, paste it into the message box and press **Return**:
-
-   ```
-   Read ~/Downloads/SKILL.md and let's get started.
-   ```
-
-**Never used Claude Code, or not sure?**
-
-1. Open the Claude app, or go to [claude.ai](https://claude.ai), and start a new chat.
-2. Drag the file from your Downloads folder into the message box, then press **Return**.
-3. Claude will welcome you and help you open Claude Code. You'll finish there.
-
-That's it. Claude takes it from here.
+That's it. Claude reads the guide and takes it from here. If you started in a regular chat, Claude helps you open Claude Code, which is where the building happens.
 
 ## Already have an enablement
 
 If you built an enablement at Campfire, at a hackathon, or on your own, you don't start over. Claude adds two small things to it: a way to build it that the Exchange can host, and the signals that tell the Exchange who finished. Your enablement's own site keeps working exactly as it does now.
 
 1. Download the guide (Step 1 above).
-2. Open Claude Code **in your enablement's project folder**.
-3. Paste this line and press **Return**:
+2. Drop **SKILL.md** into Claude, the same way.
+3. Type this with it and press **Return**:
 
    ```
-   Read ~/Downloads/SKILL.md and get this enablement onto the AI Exchange.
+   Get my enablement onto the AI Exchange.
    ```
+
+If you already use Claude Code, do this with Claude Code open in your enablement's project folder. If you don't, Claude gets you there.
 
 Claude checks that the enablement fits, makes the changes on a separate branch, proves both versions still build, and writes the message for you to send to an Exchange admin.
 

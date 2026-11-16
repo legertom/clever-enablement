@@ -5,9 +5,9 @@ description: Sets up a Clever employee's Mac and guides them, step by step, thro
 
 # Build an enablement for the Clever AI Exchange
 
-**Builder: give this file to Claude, and Claude will walk you through everything.** In a regular Claude chat, drag this file into the message box and press Return. Already in Claude Code? Type `Read ~/Downloads/SKILL.md and let's get started.` You don't need any coding experience. The first-time setup takes about 45 minutes, and some of that is waiting while things install.
+**Builder: drop this file into Claude, and Claude will walk you through everything.** Drag it into the message box of any Claude (the Claude app, claude.ai, or Claude Code) and press Return. You don't need any coding experience. The first-time setup takes about 45 minutes, and some of that is waiting while things install.
 
-**Already built an enablement?** Open Claude Code in that enablement's folder and type `Read ~/Downloads/SKILL.md and get this enablement onto the AI Exchange.` Claude adds what the Exchange needs and leaves your enablement's own site working as it does now.
+**Already built an enablement?** Drop this file into Claude the same way and type `Get my enablement onto the AI Exchange.` with it. If you use Claude Code, do it with Claude Code open in that enablement's folder. Claude adds what the Exchange needs and leaves your enablement's own site working as it does now.
 
 Questions at any point? Ask Claude. If Claude can't answer, ask Katie Clarkson, who owns enablements on the AI Exchange, or any Exchange admin.
 
@@ -87,6 +87,8 @@ You can't change your own model, but you can tell the Builder when to switch (th
 
 The setup has to happen in **Claude Code**, because Claude Code can run commands on their Mac and do the typing for them.
 
+**The Builder starts by dropping this file into Claude,** often with no message at all. A file with nothing typed is the request: begin at the beginning. If they typed something with it, such as wanting an enablement they already have on the Exchange, that tells you which path they're on.
+
 **First, figure out where you are.** You're in Claude Code only if you can run shell commands directly on their Mac.
 
 - **If you can't** (a regular chat on claude.ai, the Claude app's Chat tab, a phone), do **Phase 1**. Don't attempt the setup there, even if they ask. Explain that the point is for Claude Code to do the work with them.
@@ -109,15 +111,17 @@ The setup has to happen in **Claude Code**, because Claude Code can run commands
 
 **Getting into Claude Code.** One step at a time; wait for each.
 
-1. **Make a folder.** In Finder: **Go → Home**, then **File → New Folder**, named `enablements` (lowercase). Drag it into the Finder sidebar under Favorites. Move this file into it.
+1. **Make a folder.** In Finder: **Go → Home**, then **File → New Folder**, named `enablements` (lowercase). Drag it into the Finder sidebar under Favorites. Move this file into it. If they already have an enablement project on this Mac, skip the new folder: in the next step they open Claude Code in that project's folder instead.
 2. **Open Claude Code in that folder.** Ask whether they have the Claude desktop app.
    - **Claude desktop app (simplest):** the **Code** tab → new session → if asked where to run, **Local** → choose the `enablements` folder. If they don't have the app, it's at https://claude.ai/download; they sign in with their Clever Claude account.
    - **VS Code:** download from https://code.visualstudio.com, install the **Claude Code** extension published by **Anthropic**, **File → Open Folder… → enablements**, open Claude Code from the sidebar, and sign in with their Clever Claude account (the subscription option, not an API key).
 
    On a Mac that's never used developer tools, a popup may ask to install "command line developer tools". They click **Install**, then **Agree**, and let it finish. If Claude Code isn't available on their account, they ask an Exchange admin, then come back.
-3. **Hand off.** Have them type this in Claude Code:
+3. **Hand off.** Have them drop this file into Claude Code's message box, the way they dropped it here, type this with it, and press Return:
 
-   `I'm <first name>, coming from Claude chat. Read SKILL.md and walk me through the setup.`
+   `I'm <first name>, coming from Claude chat. Walk me through the setup.`
+
+   For someone bringing an existing enablement, the line is `I'm <first name>, coming from Claude chat. Get this enablement onto the AI Exchange.`
 
 ---
 
