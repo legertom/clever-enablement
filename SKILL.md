@@ -19,11 +19,11 @@ Questions at any point? Ask Claude. If Claude can't answer, ask Katie Clarkson, 
 
 Read this first, because it changes what you tell the Builder at the end.
 
-**Status as of 2026-11-16: the AI Exchange hosts enablements, and Builders publish them themselves.** Whoever changes how publishing works updates this section.
+**Status as of 2026-11-16: the AI Exchange hosts enablements, and Builders publish them themselves, with no approval step unless the Exchange's checks flag something.** Whoever changes how publishing works updates this section.
 
 What works today:
 
-- **Publishing.** The Builder adds the package from Step 7 at **New → Publish an enablement** on the Exchange (`https://clever-ai-exchange.vercel.app/publish`). The Exchange checks it on the spot, an admin previews and approves it, and it is live. See "Step 8: Publish".
+- **Publishing.** The Builder adds the package from Step 7 at **New → Publish an enablement** on the Exchange (`https://clever-ai-exchange.vercel.app/publish`). The Exchange checks it on the spot, and the Builder publishes it themselves: it is live straight away. Updates work the same way. An admin looks first only when the checks flag something. See "Step 8: Publish".
 - **Hosting.** A published enablement runs at the Exchange's enablements address, `https://clever-enablements.vercel.app/t/<slug>/`. A learner finds it in the Exchange catalog and clicks **Start learning**, and it opens already signed in. Nobody reaches an enablement without coming through the Exchange.
 - **A saved place.** Whatever the enablement keeps in `localStorage` is saved to the learner's Exchange account, so they can stop and pick it up later, on any device.
 - **Progress records.** The Exchange records which steps each learner finishes, their answers, how long each step takes, and when they finish. The enablement's page on the Exchange says so to learners before they start.
@@ -344,25 +344,32 @@ When the team says it's ready:
 
 ### Step 8: Publish
 
-Tell them: "Last step. You add the file on the Exchange, it checks it, and an admin has a look before it goes live."
+Tell them: "Last step. You add the file on the Exchange, it checks it, and you publish it yourself."
 
 1. **Settle three things first,** with the Builder:
    - **Full names of everyone on the team,** spelled the way they appear on the Exchange, in `enablement.json`. First names and nicknames get the wrong person credited.
    - **A one-line summary and a short description** for its page in the catalog: who it is for and what they will be able to do afterwards. Draft both and read them back. The Builder types or pastes them on the Publish page.
-   - **That the whole team agrees** to it being listed on the Exchange and to progress being recorded. If the Builder isn't sure, they ask before publishing.
-2. **The Builder publishes it.** They open `https://clever-ai-exchange.vercel.app/publish` (on the Exchange: **New → Publish an enablement**), and drop the zip from Step 7 onto the page. You can't do this for them: say where the file is (`open -R <path>` shows it in Finder) and wait.
+   - **That the whole team agrees** to it being listed on the Exchange and to progress being recorded. Nobody else reviews it before it goes live, so this is the check. If the Builder isn't sure, they ask before publishing.
+2. **The Builder adds the file.** They open `https://clever-ai-exchange.vercel.app/publish` (on the Exchange: **New → Publish an enablement**), and drop the zip from Step 7 onto the page. You can't do this for them: say where the file is (`open -R <path>` shows it in Finder) and wait.
 3. **If the Exchange doesn't accept it,** the page says what is wrong and shows a box of text headed "Paste this to Claude". The Builder pastes it to you. Fix exactly what it names, run Steps 6 and 7 again, and have them add the new file. The usual causes:
    - *Not built for its address:* build with `ENABLEMENT_BASE_PATH=/t/<slug>`, where `<slug>` is the one in `enablement.json`, and wrap any typed path with `asset(...)`.
    - *No step list, or a problem in it:* fix `enablement.json` and keep it at the top of the zip beside `bundle/` and `source/`.
    - *A `.env` file or something that looks like a key:* leave `.env` files out, find where the key reached the built files, and tell the Builder plainly that a key in a built file should be treated as exposed and replaced.
    - *The address belongs to another enablement:* choose a different slug, change it in `enablement.json`, and build again with the new address.
-4. **If it's accepted,** the page shows what it found: the title, the steps, the size. For a new enablement the Builder fills in the one-line summary and the description from item 1, then presses **Send for review**. It shows as **Waiting on an admin**.
-5. **Have them preview it while they wait.** **Preview** on the Publish page opens exactly the files they sent, at the address they will live at, with a panel in the corner that lists each step, answer and finish as the enablement reports it. Have the Builder go through the whole thing and check the panel ends with "The Exchange would mark this complete." Nothing in a preview is recorded. If a step never shows up, that is a tracking bug: fix it, package again, and publish again, which replaces the one that is waiting.
-6. **Then an admin decides.** Nobody can approve their own submission, admins included. The Builder gets a notification either way:
-   - **Live:** it has its own page in the catalog, with the Builder as owner. Have them find it, click **Start learning**, and go through it once as a learner. At the end the Exchange asks them to rate it; that is expected, and it is what makes it count as completed.
-   - **Sent back:** the admin's note is on the Publish page. They paste it to you. Fix what it says, package again, publish again.
-7. **Tell them what they can see afterwards.** Under **Your enablements** on the Publish page: who has started and finished, how far people get, and every rating and comment. The collaborators credited on the catalog page see the same; the owner adds them there.
-8. **Remind them to keep the project folder.** The Exchange holds a copy of the enablement as it was when it was approved, so changing the project later doesn't change what learners see. Updating is the same loop: change it, check tracking, package again, publish again. It becomes a new version when an admin approves it, and learners keep getting the current one until then. Step ids stay the same forever; new steps get new ids.
+   - *A teammate already has a package saved at this address:* nothing to fix. The Builder asks that teammate to publish or withdraw theirs.
+4. **If it's accepted,** the page shows what it found: the title, the steps, the size. For a new enablement the Builder fills in the one-line summary and the description from item 1. Then the page says one of two things.
+5. **"Nothing is holding this one up"** (the usual case). There are two buttons. Recommend **Preview first** the first time an enablement is published, and for any update that changed steps or tracking:
+   - **Preview first** saves it without publishing; nobody else can see it. Under **What you've sent** it shows as **Ready to publish**, and **Preview** opens exactly the files they sent, at the address they will live at, with a panel in the corner that lists each step, answer and finish as the enablement reports it. Have the Builder go through the whole thing and check the panel ends with "The Exchange would mark this complete." Nothing in a preview is recorded. If a step never shows up, that is a tracking bug: have them press **Withdraw**, fix it, package again, and add the new file. When the preview is right, they press **Publish**.
+   - **Publish now** makes it live at once. Fine for a small fix to something that is already live and already previewed.
+6. **"An admin will look at this one before it goes live"**, with the reason. The only button is **Send for review**. Read the reason with the Builder, because most can be fixed instead of waited on:
+   - *Nothing in it reports progress:* tracking is not wired in, or the build left it out. Go back to Step 6. Don't send this one for review.
+   - *A page loads a script from another site:* say which script and why it is there. If the enablement can do without it, remove it and package again. If it can't, send it for review and tell the Builder an admin will ask what it is.
+   - *This version drops a step that is live:* if the step was renamed, put its old id back and package again. If it really was removed, send it for review: an admin confirms that people's progress on that step can stop counting.
+   - *An admin took it down, or sent the last version back:* send it for review. The admin who raised the problem sees the fix.
+   A held package shows as **Waiting on an admin**. The Builder can preview it while they wait and gets a notification either way. If it is sent back, the admin's note is on the Publish page: they paste it to you, you fix what it says, and they publish again.
+7. **Once it is live,** it has its own page in the catalog with the Builder as owner. Have them find it, click **Start learning**, and go through it once as a learner. At the end the Exchange asks them to rate it; that is expected, and it is what makes it count as completed.
+8. **Tell them what they can see afterwards.** Under **Your enablements** on the Publish page: who has started and finished, how far people get, and every rating and comment. The collaborators credited on the catalog page see the same; the owner adds them there.
+9. **Remind them to keep the project folder.** The Exchange holds a copy of the enablement as it was when it was published, so changing the project later doesn't change what learners see. Updating is the same loop: change it, check tracking, package again, publish again. The new version replaces the live one as soon as they publish it, and anyone part-way through keeps their place. Step ids stay the same forever; new steps get new ids. Removing a step is what sends an update to an admin.
 
 ### Bringing an existing enablement to the Exchange
 
@@ -654,7 +661,7 @@ You're working with [Builder's first name]. Explain what you're doing in simple,
 
 ## On the AI Exchange
 - The Exchange hosts a copy of this enablement at `/t/[slug]/` on its enablements address, behind Clever sign-in. `ENABLEMENT_BASE_PATH=/t/[slug] npm run build` makes that copy in `out/`. Built without it, the enablement runs on its own as usual.
-- The copy doesn't update itself. After a change: build both ways, preview the Exchange build (`node ~/enablements/preview-hosted.mjs [slug]`), package, and publish the new package at https://clever-ai-exchange.vercel.app/publish. It becomes a new version once an admin approves it.
+- The copy doesn't update itself. After a change: build both ways, preview the Exchange build (`node ~/enablements/preview-hosted.mjs [slug]`), package, and publish the new package at https://clever-ai-exchange.vercel.app/publish. It replaces the live version as soon as it is published. Keep step ids the same: a version that drops a live step waits for an admin.
 - The Exchange asks learners for a rating when they finish. Don't add a feedback form or survey here.
 
 ## What can't go in

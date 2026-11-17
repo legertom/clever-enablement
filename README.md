@@ -53,9 +53,9 @@ Open Claude Code in your enablement's project folder and say what you want to do
 
 ## Good to know
 
-- **Publishing.** You publish it yourself: on the Exchange, open **New → Publish an enablement** and add the file Claude packaged. The Exchange checks it on the spot and, if something is wrong, gives you the exact words to paste to Claude. An admin previews and approves it, and then it is live in the catalog under your name.
+- **Publishing.** You publish it yourself: on the Exchange, open **New → Publish an enablement** and add the file Claude packaged. The Exchange checks it on the spot and, if something is wrong, gives you the exact words to paste to Claude. Then you publish it yourself: it is live in the catalog under your name straight away, or you can preview it at its real address first. Nobody has to approve it. An admin looks first only when the checks flag something, and the page tells you why.
 - **Feedback is built in.** When someone finishes, the Exchange asks them for a star rating and a comment. You don't build that yourself. You see every rating and comment under **Your enablements** on the Publish page.
 - **What the Exchange records.** Which steps each learner finishes, their answers, how long each step takes, and when they complete it. Exchange admins can see it, and so can you and the collaborators credited on your enablement. Its page on the Exchange tells learners so before they start.
-- **Updates.** The Exchange holds a copy of your enablement as it was when it was approved. To update it, change your project, ask Claude to package it again, and publish the new package. It becomes a new version once an admin approves it.
+- **Updates.** The Exchange holds a copy of your enablement as it was when you published it. To update it, change your project, ask Claude to package it again, and publish the new package. The new version replaces the live one as soon as you publish it.
 - **What can't go in an enablement.** Real customer, district, school, student or staff data, and passwords or keys. Use realistic made-up examples.
 - **This guide is also a Claude skill.** The folder can be installed as a skill named `clever-enablement`.
