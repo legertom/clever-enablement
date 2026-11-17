@@ -11,7 +11,7 @@ Owner and author: **Katie Clarkson**. Questions go to Katie or any AI Exchange a
 ## What you'll end up with
 
 - Claude Code and VS Code on your Mac
-- A secure connection between Claude and the AI Exchange
+- A secure connection between Claude and the AI Exchange, if you want one
 - Your own enablement project, which you change by asking Claude in plain English
 - A packaged enablement, which Claude publishes on the Exchange when you say go
 
@@ -54,7 +54,7 @@ Open Claude Code in your enablement's project folder and say what you want to do
 ## Good to know
 
 - **Publishing.** It is yours to publish, and there are two ways. Ask Claude to "publish this to the Exchange": it sends the package, tells you what the Exchange's checks found, and publishes it when you say go. Or do it by hand: on the Exchange, open **New → Publish an enablement** and add the file Claude packaged. Either way the Exchange checks it on the spot, and it is live in the catalog under your name straight away, or you can preview it at its real address first. Nobody has to approve it. An admin looks first only when the checks flag something, and you are told why.
-- **Letting Claude publish.** Claude can publish only if the token you made for it has the `enablements:write` permission. A token from before 16 November 2026 does not. Claude will tell you if yours needs replacing, and the Publish page works without it.
+- **Letting Claude publish.** Claude can publish only if the token you made for it has the `enablements:write` permission. A token from before 16 November 2026 does not. Claude will tell you if yours needs replacing. It also works only in VS Code: the Claude desktop app at Clever does not allow the connection. You can skip the connection altogether and add the file on the Publish page yourself.
 - **Feedback is built in.** When someone finishes, the Exchange asks them for a star rating and a comment. You don't build that yourself. You see every rating and comment under **Your enablements** on the Publish page.
 - **What the Exchange records.** Which steps each learner finishes, their answers, how long each step takes, and when they complete it. Exchange admins can see it, and so can you and the collaborators credited on your enablement. Its page on the Exchange tells learners so before they start.
 - **Updates.** The Exchange holds a copy of your enablement as it was when you published it. To update it, change your project, ask Claude to package it again, and publish the new package. The new version replaces the live one as soon as you publish it.

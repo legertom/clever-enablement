@@ -32,6 +32,7 @@ What works today:
 
 What the Exchange connection can't do:
 
+- **Work outside VS Code.** At Clever, people can add the connection only to Claude Code in VS Code. The Claude desktop app there does not allow it. A Builder who works in the desktop app publishes on the Publish page.
 - **Publish without the right permission.** It publishes only the Builder's own packages, and only when their token has the `enablements:write` permission (Step 2). A token made before 2026-11-16, or with the default permissions, doesn't have it.
 - **Anything an admin does.** It can't approve a package that is waiting on an admin, send one back, or take a live enablement down.
 - **Show a preview.** A preview opens in the Builder's browser, signed in to the Exchange. You give them the link.
@@ -116,9 +117,9 @@ The setup has to happen in **Claude Code**, because Claude Code can run commands
 **Getting into Claude Code.** One step at a time; wait for each.
 
 1. **Make a folder.** In Finder: **Go → Home**, then **File → New Folder**, named `enablements` (lowercase). Drag it into the Finder sidebar under Favorites. Move this file into it. If they already have an enablement project on this Mac, skip the new folder: in the next step they open Claude Code in that project's folder instead.
-2. **Open Claude Code in that folder.** Ask whether they have the Claude desktop app.
-   - **Claude desktop app (simplest):** the **Code** tab → new session → if asked where to run, **Local** → choose the `enablements` folder. If they don't have the app, it's at https://claude.ai/download; they sign in with their Clever Claude account.
-   - **VS Code:** download from https://code.visualstudio.com, install the **Claude Code** extension published by **Anthropic**, **File → Open Folder… → enablements**, open Claude Code from the sidebar, and sign in with their Clever Claude account (the subscription option, not an API key).
+2. **Open Claude Code in that folder.** There are two places to run it, and at Clever they are not equal. Only Claude Code in **VS Code** can be connected to the AI Exchange (Step 2). The Claude desktop app at Clever does not allow that connection. Recommend VS Code. If they would rather stay in the desktop app, building works there; say plainly that you won't be able to look things up on the Exchange or publish for them from it, and that they will add the finished file on the Exchange's Publish page themselves.
+   - **VS Code (recommended):** download from https://code.visualstudio.com, install the **Claude Code** extension published by **Anthropic**, **File → Open Folder… → enablements**, open Claude Code from the sidebar, and sign in with their Clever Claude account (the subscription option, not an API key).
+   - **Claude desktop app:** the **Code** tab → new session → if asked where to run, **Local** → choose the `enablements` folder. If they don't have the app, it's at https://claude.ai/download; they sign in with their Clever Claude account.
 
    On a Mac that's never used developer tools, a popup may ask to install "command line developer tools". They click **Install**, then **Agree**, and let it finish. If Claude Code isn't available on their account, they ask an Exchange admin, then come back.
 3. **Hand off.** Have them drop this file into Claude Code's message box, the way they dropped it here, type this with it, and press Return:
@@ -144,7 +145,7 @@ The setup has to happen in **Claude Code**, because Claude Code can run commands
 
 1. Claude Code is running
 2. Building tools and VS Code installed
-3. Claude connected to the AI Exchange
+3. Claude connected to the AI Exchange (the Builder's choice, VS Code only)
 4. The team's plan is clear
 5. Project created and previewed on your Mac
 6. Built, with progress tracking in place
@@ -179,7 +180,7 @@ Tell them: "First we'll install a few free tools your Mac needs to build an enab
 
    Warn them that nothing shows while they type their password, and that's normal. It can take 5 to 15 minutes. They tell you when it says **Installation successful!** Then quietly finish: on Apple Silicon, make sure `~/.zprofile` has `eval "$(/opt/homebrew/bin/brew shellenv)"`. This session won't see the new tools on its own, so start every `brew`, `node`, `npm` and `npx` command with `eval "$(/opt/homebrew/bin/brew shellenv)" && ` for the rest of the session (on Intel Macs, `/usr/local/bin/brew`).
 3. **Node:** `brew install node`. It should be version 20 or newer.
-4. **VS Code and the Claude Code extension.** Everyone gets both, even if they prefer the desktop app, because seeing the project's files beside the chat makes building much easier.
+4. **VS Code and the Claude Code extension.** Everyone gets both, even if they prefer the desktop app, because seeing the project's files beside the chat makes building much easier, and because VS Code is the only place the Exchange connection in Step 2 works.
    - If `/Applications/Visual Studio Code.app` doesn't exist: `brew install --cask visual-studio-code`.
    - `code --install-extension anthropic.claude-code`. If `code` isn't found, use `"/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"`.
    - Have them open VS Code, click the Claude icon in the left sidebar, and sign in with their Clever Claude account.
@@ -189,6 +190,14 @@ Tell them: "First we'll install a few free tools your Mac needs to build an enab
 Done when: `zsh -lc 'git --version && node -v && code --version && claude --version'` prints four versions and `code --list-extensions` includes `anthropic.claude-code`.
 
 ### Step 2: Connect Claude to the AI Exchange
+
+**This step is the Builder's choice, and it works only in VS Code.** Ask once, before doing anything:
+
+"Do you want me connected to the AI Exchange? It takes about five minutes. With it, I can check whether an enablement like yours already exists, and publish yours for you when you say go. Without it, everything else works the same, and at the end you add the file on the Exchange's Publish page yourself."
+
+- **If they say yes** and they are in VS Code, carry on below.
+- **If they say yes** and they are in the Claude desktop app, tell them the connection can't be added there at Clever, and offer the two ways forward: open the `enablements` folder in VS Code and continue from there, or skip the connection.
+- **If they say no,** skip to Step 3 and mark this item on the checklist "skipped: publishing by hand". Don't ask again. If they change their mind later, this step can be done at any point.
 
 Tell them: "Now let's give me a secure line to the AI Exchange, so I can check what's already there and, later, help you publish."
 
@@ -221,7 +230,7 @@ Why this step is written so carefully: the connection uses a personal token, and
 
 5. **Verify.** Run `claude mcp get ai-exchange` yourself. It should show `✔ Connected`. The connection only reaches conversations started after it was added, so have them start a new conversation in VS Code's Claude Code panel and type `/mcp`. `ai-exchange` should be listed as Connected. They come back with "pick up where we left off", and you prove it works by searching the Exchange for something.
 
-   VS Code's Claude Code panel and the Terminal share one set of connections, so VS Code is the place to rely on. Whether the Claude desktop app's Code tab picks up the same connection isn't documented. If they work in the desktop app, check `/mcp` there too; if `ai-exchange` isn't listed, do the steps that need the Exchange in VS Code and say why.
+   VS Code's Claude Code panel and the Terminal share one set of connections. The Claude desktop app at Clever does not allow this connection, so `ai-exchange` will not be there. A Builder who builds in the desktop app and wants a step that needs the Exchange (the search in Step 3, publishing in Step 8) opens the project in VS Code for that step.
 
 **If it doesn't connect**
 
@@ -249,7 +258,7 @@ Ask, and wait for answers before creating anything:
 4. **The team:** SME and Learning Designer by name.
 5. **Who should be able to see it:** everyone at Clever, or a specific team?
 
-Then, if the Exchange connection works, search the Exchange for enablements on the same topic. If something close exists, tell them what you found and ask whether they want to build on it, cover a different angle, or carry on. Finding out now is much better than finding out at the end.
+Then, if the Exchange connection is there, search the Exchange for enablements on the same topic. If the Builder skipped it, ask them to search the Exchange themselves for the topic and tell you what they find. If something close exists, tell them what you found and ask whether they want to build on it, cover a different angle, or carry on. Finding out now is much better than finding out at the end.
 
 Turn the name into a **slug**: lowercase words joined by hyphens, like `idm-sync-errors`. It becomes the folder name and the enablement's address on the Exchange.
 
@@ -354,7 +363,7 @@ Tell them: "Last step. The Exchange checks the package, and it goes live when yo
    - **Full names of everyone on the team,** spelled the way they appear on the Exchange, in `enablement.json`. First names and nicknames get the wrong person credited.
    - **A one-line summary and a short description** for its page in the catalog: who it is for and what they will be able to do afterwards. Draft both and read them back. The summary is 5 to 140 characters and the description at least 20. A new version of an enablement that is already live needs neither.
    - **That the whole team agrees** to it being listed on the Exchange and to progress being recorded. Nobody else reviews it before it goes live, so this is the check. If the Builder isn't sure, they ask before publishing.
-2. **Choose the way in.** If this conversation has the `ai-exchange` connection and it offers a tool named `start_enablement_upload`, you publish for them: item 3. If it doesn't, or the Builder would rather do it by hand, they use the Publish page: item 4. Both run the same checks and end in the same place.
+2. **Choose the way in.** If this conversation has the `ai-exchange` connection and it offers a tool named `start_enablement_upload`, you publish for them: item 3. If it doesn't (they skipped Step 2, or they are in the Claude desktop app), or the Builder would rather do it by hand, they use the Publish page: item 4. Both run the same checks and end in the same place.
 3. **Publishing over the connection.** Don't call `publish_enablement` or `publish_enablement_submission` until the Builder has heard what the check found and has said to go ahead.
    - **Send the file.** Tell the Builder you are sending the package to the Exchange and that they will be asked to allow one command. Call `start_enablement_upload`. It answers with an `uploadId` and, under `send`, a shell command. Set `ZIP` in that command to the full path of the zip from Step 7 and run it. It prints `sent N parts`. The command carries an upload ticket that works for this one upload for half an hour. It is not the Builder's token, but treat it the same way: don't print it or put it in the chat.
    - **If a tool answers "This token needs the enablements:write scope",** the Builder's token was made without that permission. Either they make a new one with it ticked and run the connect script again (Step 2, items 2 to 4), then start a new conversation and say "pick up where we left off", or they use the Publish page this time (item 4). Say which is quicker for them: the Publish page, if they only publish now and then.
@@ -451,7 +460,7 @@ Their work is saved in versions on their Mac. A backup protects it if the Mac is
 
 1. The full checklist, with everything checked off.
 2. A one-minute look inside VS Code: `code ~/enablements/<slug>`. Point out `content/` (their words), `enablement.json` (the step list) and `CLAUDE.md` (Claude's briefing note).
-3. How to get back: always open the project folder itself, so Claude reads `CLAUDE.md`. Desktop app: **Code** tab → new session → the project folder. VS Code: **File → Open Folder…**, then open Claude Code.
+3. How to get back: always open the project folder itself, so Claude reads `CLAUDE.md`. VS Code: **File → Open Folder…**, then open Claude Code. Desktop app: **Code** tab → new session → the project folder, remembering that the Exchange connection is not available there.
 4. A short cheat sheet of things they can say:
    - "Add a section about ___" or "Make this part more hands-on"
    - "Show me the enablement on my computer"
