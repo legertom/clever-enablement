@@ -233,52 +233,91 @@ Done when: `zsh -lc 'git --version && node -v && code --version && claude --vers
 
 Tell them: "Now let's give me a secure line to the AI Exchange, so I can check what's already there and, later, help you publish."
 
-Why this step is written so carefully: the connection uses a personal token, and the easy ways to set it up fail quietly. If the token is set in one command and used in another, it's gone by the second, and an empty credential gets saved. So the Builder pastes the token once, into a small script running in their own Terminal, which checks it before saving anything.
+Why this step is written so carefully: the connection uses a personal token, and the easy ways to set it up fail quietly. If the token is set in one command and used in another, it's gone by the second, and an empty credential gets saved. So the Builder pastes the token once, into a small script running in their own Terminal, which checks it before saving anything. The order matters too: the Terminal is opened and waiting **before** the token exists, so the token is the last thing they copy and nothing else lands on the clipboard in between.
 
-1. **Check first.** Run `claude mcp get ai-exchange`. If it reports the server as connected, this step is already done. A connection set up before 2026-11-16 can look things up but can't publish: its token has no `enablements:write` permission. Leave it for now. Step 8 says what to do when you get there.
-2. **The Builder makes a token.** Have them open https://clever-ai-exchange.vercel.app, sign in, go to **My stuff → API & MCP access**, and create a token named "Claude Code on my Mac". Under **Permissions** they leave what is already ticked (the read permissions) and tick one more, `enablements:write`. That one lets you publish their enablement for them in Step 8, and nothing else needs ticking. The token is shown **once**. They copy it and leave that page open. They do not paste it into the chat.
-3. **You write the connect script.** Create `~/enablements/connect-exchange.zsh` with exactly this:
+**Never let the token reach the chat.** Three things print it in plain text, and anything you run shows up in the conversation:
+
+- `claude mcp get ai-exchange` prints the saved `Authorization: Bearer aix_…` line. Don't run it. To see whether the connection is there and working, run `claude mcp list` and read the `ai-exchange` line: it gives the same status and never prints the token.
+- `~/.claude.json` holds the token. Don't open, `cat` or search it.
+- The Builder pasting it to you. Ask them not to, before they make it.
+
+If a token does appear in the conversation, say so straight away and have the Builder revoke it: on the Exchange, the same **API & MCP access** section lists their tokens, each with a **Revoke** button. Then they make a new one and run the connect script again. It takes two minutes and it is not their fault.
+
+1. **Check first.** Run `claude mcp list` and look for a line that starts `ai-exchange:`. If it ends in `Connected`, this step is already done. A connection set up before 2026-11-16 can look things up but can't publish: its token has no `enablements:write` permission. Leave it for now. Step 8 says what to do when you get there.
+2. **You write the connect script.** Create `~/enablements/connect-exchange.zsh` with exactly this:
 
    ```zsh
    #!/bin/zsh
    # Connects Claude Code to the Clever AI Exchange. The token is typed here, never in a chat.
-   read -rs "AIX_TOKEN?Paste your AI Exchange token, then press Return: "
+   echo "Paste your AI Exchange token below. Nothing will appear as you paste. That is normal."
+   read -rs "AIX_TOKEN?Paste once, then press Return: "
    echo
-   if [[ ! "$AIX_TOKEN" =~ "^aix_[a-f0-9]{12}_[A-Za-z0-9_-]{32,}$" ]]; then
-     echo "That doesn't look like an Exchange token. Nothing was saved. Copy it again and re-run this."
+   AIX_TOKEN="${AIX_TOKEN//[[:space:]]/}"
+   if [[ "$AIX_TOKEN" == aix_* ]] && (( ${#AIX_TOKEN} > 81 )); then
+     echo "That is longer than a token (${#AIX_TOKEN} characters; a token is 60). It was probably pasted more than once."
+     echo "Nothing was saved. Run this again, paste one time only, then press Return."
+     exit 1
+   fi
+   if [[ ! "$AIX_TOKEN" =~ "^aix_[a-f0-9]{12}_[A-Za-z0-9_-]{32,64}$" ]]; then
+     echo "That doesn't look like an Exchange token. A token starts with aix_ and is 60 characters long; this was ${#AIX_TOKEN}."
+     echo "Nothing was saved. Copy the whole token again and re-run this."
      exit 1
    fi
    claude mcp remove ai-exchange --scope user >/dev/null 2>&1
-   claude mcp add --transport http --scope user ai-exchange \
+   if ! claude mcp add --transport http --scope user ai-exchange \
      https://clever-ai-exchange.vercel.app/api/mcp \
-     --header "Authorization: Bearer $AIX_TOKEN"
+     --header "Authorization: Bearer $AIX_TOKEN" >/dev/null; then
+     unset AIX_TOKEN
+     echo "The connection could not be saved. Tell Claude what the line above says."
+     exit 1
+   fi
    unset AIX_TOKEN
-   claude mcp get ai-exchange
+   # "claude mcp list" shows the status without the token. "claude mcp get" would print the token.
+   claude mcp list 2>/dev/null | grep "^ai-exchange:" || echo "Saved, but ai-exchange is not in the list. Tell Claude."
    ```
 
-4. **The Builder runs it.** In VS Code: **Terminal → New Terminal**. They paste this one line and press Return, then paste their token when asked. Nothing shows while they paste, which is normal.
+3. **The Builder gets the Terminal waiting.** In VS Code: **Terminal → New Terminal**. They paste this one line and press Return:
 
    `zsh ~/enablements/connect-exchange.zsh`
 
-5. **Verify.** Run `claude mcp get ai-exchange` yourself. It should show `✔ Connected`. The connection only reaches conversations started after it was added, so have them start a new conversation in VS Code's Claude Code panel and type `/mcp`. `ai-exchange` should be listed as Connected. They come back with "pick up where we left off", and you prove it works by searching the Exchange for something.
+   The Terminal now asks for the token and waits. Tell them to leave it exactly like that and go to the browser. It will wait as long as they need.
+4. **The Builder makes the token.** Walk them through it one click at a time:
+   - Open https://clever-ai-exchange.vercel.app and sign in.
+   - Click their **profile picture** in the top right corner, then **My stuff**, and scroll down to **API & MCP access**. (https://clever-ai-exchange.vercel.app/me#api goes straight there.)
+   - Click **Create token**. Name it "Claude Code on my Mac". Under **Permissions** they leave what is already ticked (the read permissions) and tick one more, `enablements:write`. That one lets you publish their enablement for them in Step 8, and nothing else needs ticking.
+   - The token appears in a box, **once**. Triple-click it so the whole thing is selected, then press **Cmd+C**. Tell them, before they do it: "Don't copy anything else until the Terminal says Connected, and leave that box open. Don't click **I copied it** yet, and don't paste the token to me."
+5. **The Builder pastes it.** Back in VS Code they click once inside the Terminal, press **Cmd+V** once, then **Return**. Say this right at this moment, even though the Terminal says it too: "Nothing will appear when you paste. That's normal. Paste once, then press Return." If they paste again because nothing showed, the script notices and saves nothing, and they simply run the line from item 3 again.
+
+   A line starting `ai-exchange:` and ending `Connected` means it worked. Now they can click **I copied it** on the Exchange.
+6. **Verify.** Run `claude mcp list` yourself and read the `ai-exchange` line. It should end in `Connected`. Then check that a conversation can see it. The connection only reaches conversations started after it was added, so give the Builder these steps as written:
+   - Start a new conversation in VS Code's Claude Code panel.
+   - In the text box at the bottom of that panel, where they normally type to you, type `/mcp` by itself and press Return. It is a command for the panel, not a question for you, so nothing goes after it.
+   - A list of connections opens. `ai-exchange` should be in it, marked as connected. They press **Esc** to close the list.
+   - If it isn't in the list: **Cmd+Shift+P → Developer: Reload Window**, then try again.
+
+   They come back with "pick up where we left off", and you prove it works by searching the Exchange for something.
 
    VS Code's Claude Code panel and the Terminal share one set of connections. The Claude desktop app at Clever does not allow this connection, so `ai-exchange` will not be there. A Builder who builds in the desktop app and wants a step that needs the Exchange (the search in Step 3, publishing in Step 8) opens the project in VS Code for that step.
 
 **If it doesn't connect**
 
+Read the status with `claude mcp list`, never with `claude mcp get`.
+
 | What you see | Likely cause | What to do |
 |---|---|---|
-| "That doesn't look like an Exchange token" | Copied only part of it, or copied something else | Make a new token and run the script again. |
+| "That is longer than a token … probably pasted more than once" | Nothing shows while pasting, so they pasted again | Run the script again and paste once. The token on the clipboard is still good. |
+| "That doesn't look like an Exchange token" | Copied only part of it, or something else was copied after it | If the token box is still open on the Exchange, copy it again (triple-click, Cmd+C) and run the script again. If it was closed, make a new token. |
 | `! Needs authentication` | The token is wrong, was revoked, or has expired. Exchange tokens last 90 days, and all three look the same from here. | Make a new token and run the script again. |
-| `✘ Failed to connect` | The Exchange couldn't be reached, or the address is wrong. The line usually ends with the reason. | Check they can open the Exchange in a browser, then run the script again. |
+| `✘ Failed to connect` | The Exchange couldn't be reached, or the address is wrong. The line usually ends with the reason. A connection saved by an older copy of this script can also hold a token that was pasted twice. | Check they can open the Exchange in a browser, then run the script again with a freshly copied token. |
 | It worked for months and then stopped | The 90 days are up | Make a new token and run the script again. |
 | `claude: command not found` in the Terminal | The command isn't installed, or this Terminal opened before it was | Step 1, item 5, then open a new Terminal. |
 | Connected in the Terminal, but `/mcp` doesn't list it | The conversation started before the connection existed | Start a new conversation. If it still isn't there, **Cmd+Shift+P → Developer: Reload Window**. |
-| A tool answers "This token needs the enablements:write scope" | The token was made without that permission. A token's permissions can't be changed afterwards. | Make a new token with `enablements:write` ticked (item 2), run the script again, and start a new conversation. |
+| They typed `/mcp ai-exchange`, or asked you to run `/mcp` | `/mcp` is a command for the Claude Code panel. You can't run it for them. | They type `/mcp` on its own in the text box at the bottom of the panel and press Return. |
+| A tool answers "This token needs the enablements:write scope" | The token was made without that permission. A token's permissions can't be changed afterwards. | Make a new token with `enablements:write` ticked (item 4), run the script again, and start a new conversation. |
 
 Don't work around a failed connection by creating tokens through the Builder's browser yourself, and don't put the token in a project file or a shell profile. If two honest tries fail, say so, move on, and add it to the note for an Exchange admin. Building doesn't depend on this connection. Looking things up on the Exchange does, and so does publishing for the Builder; without it, they publish on the Exchange's Publish page instead (Step 8).
 
-The token is saved in Claude Code's settings file on this Mac (`~/.claude.json`). Treat that file as private, and give the token only the permissions it needs.
+The token is saved in Claude Code's settings file on this Mac (`~/.claude.json`). Treat that file as private: don't read it or print it, and give the token only the permissions it needs.
 
 ### Step 3: Make the plan with the team
 
@@ -408,7 +447,7 @@ Tell them: "Last step. The Exchange checks the package, and it goes live when yo
 2. **Choose the way in.** If this conversation has the `ai-exchange` connection and it offers a tool named `start_enablement_upload`, you publish for them: item 3. If it doesn't (they skipped Step 2, or they are in the Claude desktop app), or the Builder would rather do it by hand, they use the Publish page: item 4. Both run the same checks and end in the same place.
 3. **Publishing over the connection.** Don't call `publish_enablement` or `publish_enablement_submission` until the Builder has heard what the check found and has said to go ahead.
    - **Send the file.** Tell the Builder you are sending the package to the Exchange and that they will be asked to allow one command. Call `start_enablement_upload`. It answers with an `uploadId` and, under `send`, a shell command. Set `ZIP` in that command to the full path of the zip from Step 7 and run it. It prints `sent N parts`. The command carries an upload ticket that works for this one upload for half an hour. It is not the Builder's token, but treat it the same way: don't print it or put it in the chat.
-   - **If a tool answers "This token needs the enablements:write scope",** the Builder's token was made without that permission. Either they make a new one with it ticked and run the connect script again (Step 2, items 2 to 4), then start a new conversation and say "pick up where we left off", or they use the Publish page this time (item 4). Say which is quicker for them: the Publish page, if they only publish now and then.
+   - **If a tool answers "This token needs the enablements:write scope",** the Builder's token was made without that permission. Either they make a new one with it ticked and run the connect script again (Step 2, items 3 to 5), then start a new conversation and say "pick up where we left off", or they use the Publish page this time (item 4). Say which is quicker for them: the Publish page, if they only publish now and then.
    - **Check it.** Call `check_enablement_upload` with the `uploadId` and `parts: N`. A check publishes nothing. If `accepted` is false, go to item 5. If it is true, tell the Builder what the Exchange found, in plain words: the title, the steps, whether it is a new enablement or a new version of the live one, and anything under `holds`.
    - **If `holds` is empty** (the usual case), ask the Builder which of two they want. Recommend the preview the first time an enablement is published, and for any update that changed steps or tracking:
      - **Preview first.** Call `publish_enablement` with the `uploadId`, the summary as `tagline`, the `description`, and `previewFirst: true`. It is saved, not published: it is not in the catalog, and only the Builder and Exchange admins can open it. Give the Builder the link the answer has under `preview`. They open it in a browser where they are signed in to the Exchange. It shows exactly the files you sent, at the address they will live at, with a panel in the corner that lists each step, answer and finish as the enablement reports it. Have them go through the whole thing and check the panel ends with "The Exchange would mark this complete." Nothing in a preview is recorded. If a step never shows up, that is a tracking bug: call `withdraw_enablement_submission` with the `submissionId`, fix it, package again, and start a new upload. When the Builder says the preview is right and to publish it, call `publish_enablement_submission` with the `submissionId`.
