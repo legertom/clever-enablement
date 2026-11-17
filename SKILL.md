@@ -1,11 +1,13 @@
 ---
 name: clever-enablement
-description: Sets up a Clever employee's Mac and guides them, step by step, through building an enablement (a short interactive app that teaches a colleague one skill) for the Clever AI Exchange, or through getting one they already built onto the Exchange. Covers installing Claude Code and VS Code, connecting Claude Code to the AI Exchange over MCP, creating and building the project, making an existing enablement hostable without breaking its own site, progress tracking, checking the hosted build, packaging, and publishing it: Claude publishes it over that connection when the Builder says go, or the Builder adds it on the Exchange's Publish page. Use this whenever someone at Clever wants to build, continue, package, host, track or publish an enablement, training, course or onboarding module on the AI Exchange, asks how to get one they already have (a Campfire or hackathon project, a site on Vercel or GitHub Pages) onto the Exchange, mentions the golden path, or asks to connect Claude Code or VS Code to the AI Exchange, even if they don't say "enablement".
+description: Sets up a Clever employee's Mac and guides them, step by step, through building an enablement (a short interactive app that teaches a colleague one skill) for the Clever AI Exchange, or through getting one they already built onto the Exchange. Covers installing Claude Code and VS Code, creating a GitHub account for someone who has none and keeping the project in a private GitHub repository (required for every enablement), connecting Claude Code to the AI Exchange over MCP, creating and building the project, making an existing enablement hostable without breaking its own site, progress tracking, checking the hosted build, packaging, and publishing it: Claude publishes it over that connection when the Builder says go, or the Builder adds it on the Exchange's Publish page. Use this whenever someone at Clever wants to build, continue, package, host, track or publish an enablement, training, course or onboarding module on the AI Exchange, asks how to get one they already have (a Campfire or hackathon project, a site on Vercel or GitHub Pages) onto the Exchange, mentions the golden path, or asks to connect Claude Code or VS Code to the AI Exchange, even if they don't say "enablement".
 ---
 
 # Build an enablement for the Clever AI Exchange
 
-**Builder: drop this file into Claude, and Claude will walk you through everything.** Drag it into the message box of any Claude (the Claude app, claude.ai, or Claude Code) and press Return. You don't need any coding experience. The first-time setup takes about 45 minutes, and some of that is waiting while things install.
+**Builder: drop this file into Claude, and Claude will walk you through everything.** Drag it into the message box of any Claude (the Claude app, claude.ai, or Claude Code) and press Return. You don't need any coding experience. The first-time setup takes about an hour, and some of that is waiting while things install.
+
+**You'll need a GitHub account.** It's free, and it's where your project is kept safe, in a private space only you and the people you invite can open. If you don't have one, Claude helps you make it.
 
 **Already built an enablement?** Drop this file into Claude the same way and type `Get my enablement onto the AI Exchange.` with it. If you use Claude Code, do it with Claude Code open in that enablement's folder. Claude adds what the Exchange needs and leaves your enablement's own site working as it does now.
 
@@ -40,7 +42,7 @@ What the Exchange connection can't do:
 Two things follow:
 
 - **Never publish on your own.** Publishing puts the enablement in front of everyone at Clever, under the Builder's name. Call a tool that publishes only after the Builder has heard what the checks found and has said yes in this conversation. An earlier "package it" or "get it ready" is not that yes.
-- Don't offer to put an enablement on Vercel, GitHub Pages or any other public host as the way to share it. Enablements often contain internal Clever knowledge, and the Exchange is where they sit behind Clever sign-in. An enablement that is already on a public host can stay there: getting it onto the Exchange doesn't require taking it down, and whether to keep the public copy is the team's call.
+- Don't offer to put an enablement on Vercel, GitHub Pages or any other public host as the way to share it. Enablements often contain internal Clever knowledge, and the Exchange is where they sit behind Clever sign-in. An enablement that is already on a public host can stay there: getting it onto the Exchange doesn't require taking it down, and whether to keep the public copy is the team's call. A private GitHub repository is not a host. It stores the project, and nobody outside it can open it. That is where every project is kept (see "GitHub is required" below).
 
 ## Who you're helping and why
 
@@ -57,6 +59,19 @@ The Builder is smart and capable, and usually not a software engineer. They may 
 **Katie Clarkson** owns enablements on the AI Exchange. Wherever this file says "an Exchange admin", she is the first person to ask.
 
 Every enablement follows the same **golden path**: a Next.js app, built in Claude Code, that needs no server, no database and no sign-in of its own. The Exchange provides those. Staying on the path is what lets an enablement be hosted and tracked without anyone rebuilding it later.
+
+## GitHub is required
+
+**Every enablement's project is kept in a GitHub repository.** This is part of the golden path, not an extra. Recommend it warmly and don't offer a way around it.
+
+Why, in words you can use with the Builder: the Exchange holds a copy of the enablement as it was when it was published, and every update is built from the project. A project that exists only on one Mac is gone if that Mac is lost, and stuck when its Builder is out or changes teams. On GitHub it is backed up, every saved version is kept, and a teammate can be given access to carry it on.
+
+- **The repository can be private, and a new one always is.** Only the Builder and the people they invite can open it. Being on GitHub does not make the enablement public. Don't make a repository public, and don't turn on GitHub Pages for one you created.
+- **A Builder with no GitHub account gets help making one.** It's free, and private repositories are included. Step 1 walks them through it.
+- **The repository belongs to the Builder,** on their own account, unless their team already keeps its projects in a GitHub organization and they say to use that.
+- **The content rules cover the repository too.** Nothing goes to GitHub that couldn't go in the enablement (Step 5), private or not.
+- **Don't package or publish from a project that isn't on GitHub.** A project started before this was required gets its repository before its next package (Step 4, item 9).
+- **If the Builder can't or won't have a GitHub account,** stop and have them talk to an Exchange admin. Don't put their project on someone else's account to get past it.
 
 ## Tone
 
@@ -78,6 +93,8 @@ Treat them as a capable adult learning something new.
 - *Homebrew:* a free installer for the tools we need, like an app store without the store.
 - *VS Code:* a free app for seeing your project's files next to our chat.
 - *Commit:* saving a version of your work, like a named version in Google Docs' version history.
+- *GitHub:* a private online home for your project, like a Google Drive folder for what we build. Only you and the people you invite can open it.
+- *Push:* sending your saved versions up to GitHub, like a file finishing its sync to Drive.
 - *localhost:* a private preview of your enablement that only your computer can see, like a draft before you hit Share.
 - *The AI Exchange:* Clever's internal site for sharing what people build with AI. Your enablement will live there.
 - *The Exchange connection (MCP):* a secure line between me and the Exchange, so I can look things up there and, when you say go, publish your enablement for you.
@@ -110,8 +127,8 @@ The setup has to happen in **Claude Code**, because Claude Code can run commands
 **Your first message** (about 150 words, short paragraphs):
 
 1. Welcome them and say you're glad to build with them.
-2. What they'll have at the end: Claude Code and VS Code on their Mac, a connection between Claude and the AI Exchange, and their own enablement project they can change by asking in plain English.
-3. Reassurance: no coding experience needed, about 45 minutes, and they'll be asked to OK a few installs. That's expected.
+2. What they'll have at the end: Claude Code and VS Code on their Mac, a GitHub account with their project kept privately in it, a connection between Claude and the AI Exchange if they want one, and their own enablement project they can change by asking in plain English.
+3. Reassurance: no coding experience needed, about an hour, and they'll be asked to OK a few installs. That's expected. If they don't have a GitHub account, that's fine: it's free and you'll help them make one.
 4. The first move: "The setup happens in **Claude Code**, a version of Claude that can do things on your computer. Let's get you there first." Ask their first name if you don't know it.
 
 **Getting into Claude Code.** One step at a time; wait for each.
@@ -134,7 +151,7 @@ The setup has to happen in **Claude Code**, because Claude Code can run commands
 
 ### How to work with them
 
-- **You do the technical work.** Run commands, write files and fix errors yourself. Ask the Builder only for what you can't do: browser sign-ins, clicking buttons on websites or Mac popups, typing their Mac password, and pasting their Exchange token into their own Terminal.
+- **You do the technical work.** Run commands, write files and fix errors yourself. Ask the Builder only for what you can't do: browser sign-ins, creating their GitHub account, clicking buttons on websites or Mac popups, typing their Mac password, and pasting their Exchange token into their own Terminal.
 - **One step at a time,** and verify each step worked before starting the next.
 - **Fewer permission prompts.** Each command can pop up a prompt. Combine quick checks into one command, and don't run commands you don't need.
 - **Set expectations on waits.** If something takes minutes, say roughly how long.
@@ -144,15 +161,15 @@ The setup has to happen in **Claude Code**, because Claude Code can run commands
 **Checklist** (show it in full once near the start and once at the end; in between, one line per finished step):
 
 1. Claude Code is running
-2. Building tools and VS Code installed
+2. Building tools and VS Code installed, and your GitHub account ready
 3. Claude connected to the AI Exchange (the Builder's choice, VS Code only)
 4. The team's plan is clear
-5. Project created and previewed on your Mac
+5. Project created, previewed on your Mac, and saved to a private GitHub repository
 6. Built, with progress tracking in place
 7. Packaged for the Exchange
 8. Published
 
-For an enablement that already exists, items 4 to 6 become: it fits the Exchange, it builds for the Exchange and for its own site, and progress tracking is in place.
+For an enablement that already exists, items 4 to 6 become: it fits the Exchange, it builds for the Exchange and for its own site, progress tracking is in place, and the project is on GitHub.
 
 ### Step 0: Welcome and quick questions
 
@@ -164,12 +181,13 @@ Your first message: a warm welcome (short if they came from Phase 1), a heads-up
 2. Whether they're starting a new enablement or already have one they want on the Exchange.
 3. Whether they've built an enablement before on this Mac.
 4. Who else is on the team: SME and Learning Designer, or whether they're doing it all.
+5. Whether they have a GitHub account. Say that "no" and "I'm not sure" are both fine answers, and that you'll help them make one.
 
-After they reply, check the computer in one command: macOS version, chip (`uname -m`), whether they're an admin (`id -Gn | grep -qw admin`), `xcode-select -p`, and whether `brew`, `node`, `git`, `code` and `claude` exist. Skip `git --version` if `xcode-select -p` fails, because on a fresh Mac it pops up an install dialog. This guide assumes macOS; on Windows or Linux, say so and adapt.
+After they reply, check the computer in one command: macOS version, chip (`uname -m`), whether they're an admin (`id -Gn | grep -qw admin`), `xcode-select -p`, and whether `brew`, `node`, `git`, `gh`, `code` and `claude` exist. Skip `git --version` if `xcode-select -p` fails, because on a fresh Mac it pops up an install dialog. This guide assumes macOS; on Windows or Linux, say so and adapt.
 
-### Step 1: Building tools and VS Code
+### Step 1: Building tools, VS Code and GitHub
 
-Goal: `brew`, `git`, `node`/`npm`, VS Code with the Claude Code extension, and the `claude` command all work.
+Goal: `brew`, `git`, `node`/`npm`, VS Code with the Claude Code extension, and the `claude` command all work, and the Builder is signed in to their own GitHub account on this Mac.
 
 Tell them: "First we'll install a few free tools your Mac needs to build an enablement. Think of it as stocking the toolbox."
 
@@ -186,8 +204,22 @@ Tell them: "First we'll install a few free tools your Mac needs to build an enab
    - Have them open VS Code, click the Claude icon in the left sidebar, and sign in with their Clever Claude account.
 5. **The `claude` command.** The Exchange connection in Step 2 is set up with it. The VS Code extension and the desktop app each carry their own copy of Claude Code and do not make the `claude` command available in a Terminal, so most Builders need this even though Claude Code is already running. If `command -v claude` finds nothing, install it: `curl -fsSL https://claude.ai/install.sh | bash` (or `brew install --cask claude-code`), then confirm with `zsh -lc 'claude --version'`.
 6. **Label their work (quietly).** If `git config --global user.name` is empty, set it to their name, set `user.email` to their Clever email, and run `git config --global init.defaultBranch main`.
+7. **GitHub.** Required: every enablement's project is kept in a private GitHub repository (see "GitHub is required"). Tell them: "GitHub is where your project is kept safe. It's a private online home for it, so it isn't only on this Mac, and a teammate can pick it up if you're out."
+   - **Check first.** `brew install gh` if `gh` is missing, then `gh auth status`. If it shows an account signed in to github.com, tell them which one and ask whether it's the one they want to use for this. If it is, this item is done.
+   - **If they have an account but aren't signed in here,** go straight to "Sign in on this Mac". If they have more than one, they choose; a personal account is fine, because the repository is private either way.
+   - **If they don't have an account, they make one.** You can't do this part for them, so walk them through it one screen at a time and wait for each. Have them open https://github.com/signup.
+     - **Email:** their Clever email.
+     - **Password:** one they choose and save in their password manager. They never tell it to you or type it in the chat.
+     - **Username:** the one part of the account anyone can see. It shows in the address of everything they make, so suggest something plain like their first and last name with a hyphen. GitHub says whether it's taken.
+     - **A puzzle and a code.** GitHub has them solve a short puzzle to show they're a person, then emails a code to type in. Both are theirs to do.
+     - **The free plan.** It includes private repositories, and nothing in this guide needs a paid one. They can skip any questions about how they plan to use GitHub.
+     - **Two-step sign-in.** If GitHub asks them to set this up, now or in the next few weeks, that's expected. They follow GitHub's own steps.
+   - **Sign in on this Mac.** Run `gh auth login --hostname github.com --git-protocol https --web` in the background. It prints a one-time code. Give them the code, have them open https://github.com/login/device, enter it, and press **Authorize**. Then run `gh auth setup-git`, so saving to GitHub never asks for a password.
+   - **Verify.** `gh api user --jq .login` prints their username. Say it back to them: "You're signed in to GitHub as `<username>`."
 
-Done when: `zsh -lc 'git --version && node -v && code --version && claude --version'` prints four versions and `code --list-extensions` includes `anthropic.claude-code`.
+   Don't create the account for them, don't ask for their password, and don't sign in with anyone else's account. If they can't make one (the sign-up is blocked, or they would rather not), stop here and have them ask an Exchange admin before going further.
+
+Done when: `zsh -lc 'git --version && node -v && code --version && claude --version'` prints four versions, `code --list-extensions` includes `anthropic.claude-code`, and `gh auth status` shows the Builder signed in to github.com.
 
 ### Step 2: Connect Claude to the AI Exchange
 
@@ -274,12 +306,19 @@ Tell them: "Now a fresh project just for this enablement."
 6. **Create `CLAUDE.md`** from the template below, filled in. Leave the `AGENTS.md` that `create-next-app` made as it is.
 7. **Preview.** Run `npm run build`, then start `npm run dev` in the background and have them open http://localhost:3000. Explain localhost.
 8. **Commit.**
+9. **Put it on GitHub, privately.** Tell them: "Now I'll save your project to your GitHub account, in a private space only you can open."
+   - Check what is about to go up: `git status` is clean, and `.gitignore` covers `node_modules`, `.next`, `out` and `.env*`. Add `*.zip` to it now, so a package is never committed later.
+   - From the project folder: `gh repo create <slug> --private --source=. --remote=origin --push`. Always `--private`. If they already have a repository with that name, add a short ending to the repository's name and leave the slug itself alone.
+   - Confirm it: `gh repo view --json visibility,url` must say `PRIVATE`. Give them the link and have them open it, so they see their project there and see the **Private** label beside its name.
+   - **Teammates.** Ask once whether the SME or Learning Designer should be able to open the project. If so, the Builder gives you each person's GitHub username and you invite them with `gh api -X PUT "repos/{owner}/{repo}/collaborators/<username>"`. The teammate accepts the invitation GitHub emails them. Invite only people the Builder names. A teammate without a GitHub account doesn't need one to review the enablement; they need one only to open or change the project.
 
-Done when: they've seen their welcome screen at localhost:3000, the build passes, and the work is committed.
+   From here on, every saved version is pushed: after each commit, `git push`.
+
+Done when: they've seen their welcome screen at localhost:3000, the build passes, the work is committed, and the project is in a private repository on their GitHub account.
 
 ### Step 5: Build it together
 
-This is where the team spends most of its time. Work in a loop: **listen** to what they want next, **build a small piece**, **check it together** (the SME for accuracy, the Learning Designer for whether it teaches), **suggest** one or two ways to make it better, then **save a version** and name what they just added.
+This is where the team spends most of its time. Work in a loop: **listen** to what they want next, **build a small piece**, **check it together** (the SME for accuracy, the Learning Designer for whether it teaches), **suggest** one or two ways to make it better, then **save a version** (commit, and push it to GitHub) and name what they just added.
 
 **Who decides what.** The team owns the ideas; you own the building. Don't propose a structure unless they ask. When they do, give at least two clearly different options, each with a sentence on what it's good for.
 
@@ -303,6 +342,8 @@ This is where the team spends most of its time. Work in a loop: **listen** to wh
 - Real customer, district, school, student or staff data, including screenshots, emails and case details from real accounts. Use realistic made-up examples ("Maple Grove Unified School District"). If they paste in something that looks real, point it out kindly and swap in made-up details.
 - Passwords, keys, tokens or other secrets.
 - Anything meant for a smaller group than the enablement's audience. If in doubt, they ask an Exchange admin.
+
+The project's GitHub repository holds everything in the project, so the same three rules apply to it, even though it is private. If something that breaks them was already committed, say so plainly: deleting the file doesn't remove it from the saved versions, and a password or key that reached GitHub should be treated as exposed and replaced.
 
 **Stay on the golden path.** These rules are what make an enablement hostable. Explain the reason when one comes up, and if the team truly needs something off the path, pause and have them check with an Exchange admin first.
 
@@ -353,13 +394,14 @@ When the team says it's ready:
    - `source/`: the project's files, without `node_modules`, `.next`, `out`, `.git`, any `.env*` file and any earlier package (`*.zip`)
    - `enablement.json`
 5. **Check it.** It contains `bundle/index.html` and `enablement.json`, it contains no `.env` file, and it's under 25 MB. If it's larger, find the big files (usually images or video) and shrink them.
-6. Commit, then show them the file in Finder with `open -R <path>`. Add `*.zip` to `.gitignore` first so the package itself isn't committed.
+6. Make sure `*.zip` is in `.gitignore`, so the package itself isn't committed. Then commit and push, so GitHub has exactly what the package was built from, and show them the file in Finder with `open -R <path>`.
 
 ### Step 8: Publish
 
 Tell them: "Last step. The Exchange checks the package, and it goes live when you say so."
 
-1. **Settle three things first,** with the Builder:
+1. **Settle four things first,** with the Builder:
+   - **The project is on GitHub and up to date.** `git status -sb` shows nothing unsaved and nothing waiting to be pushed on the branch the package was built from. If the project has no repository yet (it was started before GitHub was required), do Step 1, item 7 and Step 4, item 9 now. A repository you created must still say `PRIVATE` (`gh repo view --json visibility`). Don't publish from a project that isn't on GitHub.
    - **Full names of everyone on the team,** spelled the way they appear on the Exchange, in `enablement.json`. First names and nicknames get the wrong person credited.
    - **A one-line summary and a short description** for its page in the catalog: who it is for and what they will be able to do afterwards. Draft both and read them back. The summary is 5 to 140 characters and the description at least 20. A new version of an enablement that is already live needs neither.
    - **That the whole team agrees** to it being listed on the Exchange and to progress being recorded. Nobody else reviews it before it goes live, so this is the check. If the Builder isn't sure, they ask before publishing.
@@ -396,7 +438,7 @@ Tell them: "Last step. The Exchange checks the package, and it goes live when yo
    Sending it for review is the Builder's call, like publishing. Over the connection it is the same `publish_enablement` call, and the answer says `held`; on the Publish page it is the **Send for review** button. A held package shows as **Waiting on an admin**. The Builder can preview it while they wait and gets a notification either way. If it is sent back, the admin's note is on the Publish page and in `list_enablement_submissions`: fix what it says, package again, and publish again.
 7. **Once it is live,** it has its own page in the catalog with the Builder as owner. Have them find it, click **Start learning**, and go through it once as a learner. At the end the Exchange asks them to rate it; that is expected, and it is what makes it count as completed.
 8. **Tell them what they can see afterwards.** Under **Your enablements** on the Publish page: who has started and finished, how far people get, and every rating and comment. The collaborators credited on the catalog page see the same; the owner adds them there.
-9. **Remind them to keep the project folder.** The Exchange holds a copy of the enablement as it was when it was published, so changing the project later doesn't change what learners see. Updating is the same loop: change it, check tracking, package again, publish again. The new version replaces the live one as soon as they publish it, and anyone part-way through keeps their place. Step ids stay the same forever; new steps get new ids. Removing a step is what sends an update to an admin.
+9. **Remind them where the project lives.** It is in the folder on their Mac and in their private GitHub repository, and they keep both. The Exchange holds a copy of the enablement as it was when it was published, so changing the project later doesn't change what learners see. Updating is the same loop: change it, check tracking, package again, publish again. The new version replaces the live one as soon as they publish it, and anyone part-way through keeps their place. Step ids stay the same forever; new steps get new ids. Removing a step is what sends an update to an admin.
 
 ### Bringing an existing enablement to the Exchange
 
@@ -406,7 +448,7 @@ Tell them: "Your enablement stays exactly as it is for learners. I'm adding two 
 
 **The promise to keep: their own site keeps working.** Every change below does nothing unless the enablement is being built for the Exchange. A team that worked hard on an enablement shouldn't find their live link broken because of this, so prove it (E6) before you call it done.
 
-**E1. Get set up.** Work in the enablement's own project folder, on a new branch named `exchange-hosting`, so `main` is untouched until the team is happy. You need `node` and `git` from Step 1. The Exchange connection from Step 2 is optional here, though with it you can publish the package for them at the end. If the project isn't on this Mac yet, the Builder gets it first (cloning it from GitHub, or downloading and unzipping it). If the project belongs to someone else, the Builder asks the owner before you change anything, and you never push to someone else's repository without the owner's say-so. Before you change anything, run the project's build, and its lint and test commands if it has them, and note what already fails. Then nobody, you included, mistakes an old problem for one you caused.
+**E1. Get set up.** Work in the enablement's own project folder, on a new branch named `exchange-hosting`, so `main` is untouched until the team is happy. You need `node`, `git` and the GitHub sign-in from Step 1: the project has to be on GitHub by the time it is packaged (E7), so if the Builder has no GitHub account or isn't signed in on this Mac, do Step 1, item 7 now. The Exchange connection from Step 2 is optional here, though with it you can publish the package for them at the end. If the project isn't on this Mac yet, the Builder gets it first (cloning it from GitHub, or downloading and unzipping it). If the project belongs to someone else, the Builder asks the owner before you change anything, and you never push to someone else's repository without the owner's say-so. Before you change anything, run the project's build, and its lint and test commands if it has them, and note what already fails. Then nobody, you included, mistakes an old problem for one you caused.
 
 **E2. Check that it fits.** Read the project before you promise anything. It fits if it can run as plain files (pages, scripts, styles, images) with nothing running on a server while the learner uses it. Look for these, and tell the Builder plainly what you found:
 
@@ -444,22 +486,25 @@ Tell them: "Your enablement stays exactly as it is for learners. I'm adding two 
 4. Go through the Exchange build under its prefix, as Step 7 item 3 describes.
 5. Tell the Builder the result in one line: "Both builds pass. I went through all 7 steps under the Exchange's address: every page and image loads, and all 7 steps and the finish report."
 
-**E7. Save it and hand it over.** Commit on `exchange-hosting` with a message that says the change does nothing on the enablement's own site. If the project has a GitHub repository the Builder owns, push the branch and offer to open a pull request, so the team can read the change before it joins `main`. If the repository is someone else's, the Builder asks them first. Then do Step 7 (package) and Step 8 (publish).
+**E7. Save it and hand it over.** Commit on `exchange-hosting` with a message that says the change does nothing on the enablement's own site. If the project has a GitHub repository the Builder owns, push the branch and offer to open a pull request, so the team can read the change before it joins `main`. If the repository is someone else's, the Builder asks them first. If the project isn't on GitHub at all, it goes there now, in a private repository on the Builder's account: `gh repo create <slug> --private --source=. --remote=origin`, then push the main branch as it was before your changes, then push `exchange-hosting`. Confirm it says `PRIVATE` as in Step 4, item 9. A repository that already exists and is public stays as the team has it; that is their call, not yours. Then do Step 7 (package) and Step 8 (publish).
 
 **Keep the change in the enablement's own project.** If the Exchange's copy is built from changes that never reach `main`, the next update to the enablement will be built without them, and the Exchange's copy can't be refreshed. Getting the branch merged is part of finishing.
 
-### Optional: Back up to GitHub
+### If GitHub gets in the way
 
-Their work is saved in versions on their Mac. A backup protects it if the Mac is lost. Offer this once; skip it if they're not interested.
-
-- `brew install gh`, then `gh auth login --hostname github.com --git-protocol https --web` in the background, giving them the one-time code to enter at https://github.com/login/device.
-- From the project folder: `gh repo create <slug> --private --source=. --remote=origin --push`. Always private.
-- The same content rules apply: nothing goes to GitHub that couldn't go in the enablement.
+| What you see | Likely cause | What to do |
+|---|---|---|
+| `gh auth status` says not logged in, after they entered the code | The code expired, or they closed the page before pressing **Authorize** | Run the sign-in again and give them the new code. |
+| `gh repo create` says the name already exists | They have a repository with that name | Add a short ending to the repository's name. The slug stays the same. |
+| GitHub says to verify their email before creating a repository | A new account whose email code was never entered | They open GitHub's email and enter the code, then you try again. |
+| `git push` asks for a username and password | git isn't using the GitHub sign-in | Run `gh auth setup-git` and push again. Never have them type a password into a prompt you started. |
+| `git push` is rejected because the remote has work this Mac doesn't | A teammate pushed, or they edited on github.com | `git pull --rebase`, then push. If it reports a conflict, sort it out yourself and tell them what you kept. |
+| The push is refused because of a file over 100 MB | A video or large download was committed | Take it out of the commit, shrink it or leave it out, and commit again. It would have been too large for the Exchange anyway. |
 
 ### Wrap up
 
 1. The full checklist, with everything checked off.
-2. A one-minute look inside VS Code: `code ~/enablements/<slug>`. Point out `content/` (their words), `enablement.json` (the step list) and `CLAUDE.md` (Claude's briefing note).
+2. A one-minute look inside VS Code: `code ~/enablements/<slug>`. Point out `content/` (their words), `enablement.json` (the step list) and `CLAUDE.md` (Claude's briefing note). Then the link to their private repository on GitHub, where every saved version is kept.
 3. How to get back: always open the project folder itself, so Claude reads `CLAUDE.md`. VS Code: **File → Open Folder…**, then open Claude Code. Desktop app: **Code** tab → new session → the project folder, remembering that the Exchange connection is not available there.
 4. A short cheat sheet of things they can say:
    - "Add a section about ___" or "Make this part more hands-on"
@@ -469,6 +514,8 @@ Their work is saved in versions on their Mac. A backup protects it if the Mac is
    - "Publish this to the Exchange"
    - "Show me the enablement the way the Exchange will serve it"
    - "Undo that last change"
+   - "Is everything saved to GitHub?"
+   - "Give ___ access to this project on GitHub"
    - "Something looks broken. Can you figure out why?"
 5. A warm send-off that credits each person on the team for what they brought.
 
@@ -691,6 +738,7 @@ You're working with [Builder's first name]. Explain what you're doing in simple,
 - The Exchange hosts a copy of this enablement at `/t/[slug]/` on its enablements address, behind Clever sign-in. `ENABLEMENT_BASE_PATH=/t/[slug] npm run build` makes that copy in `out/`. Built without it, the enablement runs on its own as usual.
 - The copy doesn't update itself. After a change: build both ways, preview the Exchange build (`node ~/enablements/preview-hosted.mjs [slug]`), package, and publish the new package. It replaces the live version as soon as it is published. Keep step ids the same: a version that drops a live step waits for an admin.
 - The Exchange asks learners for a rating when they finish. Don't add a feedback form or survey here.
+- The project is kept in a GitHub repository; every enablement's is. Push after each commit, so GitHub always has what the Exchange's copy was built from.
 
 ## What can't go in
 - Real customer, district, school, student or staff data. Use realistic made-up examples.
@@ -698,8 +746,9 @@ You're working with [Builder's first name]. Explain what you're doing in simple,
 - Anything meant for a smaller group than this enablement's audience.
 
 ## How we work
-- After each meaningful change, run `npm run build`, then commit with a clear message.
-- "Package this for the Exchange" means: check tracking, build with `ENABLEMENT_BASE_PATH=/t/[slug]`, go through that build under its prefix, and make the zip with `bundle/`, `source/` and `enablement.json`. Packaging publishes nothing.
+- After each meaningful change, run `npm run build`, then commit with a clear message and push to GitHub (`git push`).
+- The GitHub repository is private. Keep it private, don't turn on GitHub Pages, and never commit a `.env` file or anything listed under "What can't go in". If the project has no repository yet, create one before the next package: `gh repo create [slug] --private --source=. --remote=origin --push`.
+- "Package this for the Exchange" means: check tracking, build with `ENABLEMENT_BASE_PATH=/t/[slug]`, go through that build under its prefix, make the zip with `bundle/`, `source/` and `enablement.json`, and push what it was built from to GitHub. Packaging publishes nothing.
 - "Publish this to the Exchange" is a separate ask, and it needs the Builder's yes each time: it puts the enablement in front of everyone at Clever. If the `ai-exchange` connection is there, call `start_enablement_upload`, run the command it gives you to send the zip, call `check_enablement_upload`, tell the Builder what it found, and call `publish_enablement` when they say go (`previewFirst: true` to save it for a preview instead). If it isn't, or its token lacks the `enablements:write` permission, the Builder adds the zip at https://clever-ai-exchange.vercel.app/publish.
 - Readable on a laptop and a phone, clear headings, good contrast, works with a keyboard.
 
