@@ -1,6 +1,6 @@
 ---
 name: clever-enablement
-description: Sets up a Clever employee's Mac and guides them, step by step, through building an enablement (a short interactive app that teaches a colleague one skill) for the Clever AI Exchange, or through getting one they already built onto the Exchange. Covers installing Claude Code and VS Code, connecting Claude Code to the AI Exchange over MCP, creating and building the project, making an existing enablement hostable without breaking its own site, progress tracking, checking the hosted build, packaging, and handing it to an Exchange admin to publish. Use this whenever someone at Clever wants to build, continue, package, host, track or publish an enablement, training, course or onboarding module on the AI Exchange, asks how to get one they already have (a Campfire or hackathon project, a site on Vercel or GitHub Pages) onto the Exchange, mentions the golden path, or asks to connect Claude Code or VS Code to the AI Exchange, even if they don't say "enablement".
+description: Sets up a Clever employee's Mac and guides them, step by step, through building an enablement (a short interactive app that teaches a colleague one skill) for the Clever AI Exchange, or through getting one they already built onto the Exchange. Covers installing Claude Code and VS Code, connecting Claude Code to the AI Exchange over MCP, creating and building the project, making an existing enablement hostable without breaking its own site, progress tracking, checking the hosted build, packaging, and publishing it: Claude publishes it over that connection when the Builder says go, or the Builder adds it on the Exchange's Publish page. Use this whenever someone at Clever wants to build, continue, package, host, track or publish an enablement, training, course or onboarding module on the AI Exchange, asks how to get one they already have (a Campfire or hackathon project, a site on Vercel or GitHub Pages) onto the Exchange, mentions the golden path, or asks to connect Claude Code or VS Code to the AI Exchange, even if they don't say "enablement".
 ---
 
 # Build an enablement for the Clever AI Exchange
@@ -19,23 +19,26 @@ Questions at any point? Ask Claude. If Claude can't answer, ask Katie Clarkson, 
 
 Read this first, because it changes what you tell the Builder at the end.
 
-**Status as of 2026-11-16: the AI Exchange hosts enablements, and Builders publish them themselves, with no approval step unless the Exchange's checks flag something.** Whoever changes how publishing works updates this section.
+**Status as of 2026-11-16: the AI Exchange hosts enablements, and Builders publish them themselves, with no approval step unless the Exchange's checks flag something. You can publish for the Builder over the Exchange connection, when they say go.** Whoever changes how publishing works updates this section.
 
 What works today:
 
-- **Publishing.** The Builder adds the package from Step 7 at **New → Publish an enablement** on the Exchange (`https://clever-ai-exchange.vercel.app/publish`). The Exchange checks it on the spot, and the Builder publishes it themselves: it is live straight away. Updates work the same way. An admin looks first only when the checks flag something. See "Step 8: Publish".
+- **Publishing.** There are two ways in, with the same checks and the same result. Over the Exchange connection from Step 2, you send the package from Step 7, tell the Builder what the Exchange's checks found, and publish it when they say go. Or the Builder adds the package themselves at **New → Publish an enablement** on the Exchange (`https://clever-ai-exchange.vercel.app/publish`). Either way it is published under the Builder's name and is live straight away. Updates work the same way. An admin looks first only when the checks flag something. See "Step 8: Publish".
 - **Hosting.** A published enablement runs at the Exchange's enablements address, `https://clever-enablements.vercel.app/t/<slug>/`. A learner finds it in the Exchange catalog and clicks **Start learning**, and it opens already signed in. Nobody reaches an enablement without coming through the Exchange.
 - **A saved place.** Whatever the enablement keeps in `localStorage` is saved to the learner's Exchange account, so they can stop and pick it up later, on any device.
 - **Progress records.** The Exchange records which steps each learner finishes, their answers, how long each step takes, and when they finish. The enablement's page on the Exchange says so to learners before they start.
 - **Feedback.** When a learner finishes, the Exchange itself asks them for a star rating and an optional comment, and the enablement counts as completed for them once they answer. **Don't build a feedback form, a survey or a "rate this" screen into the enablement.** It would ask people twice.
 - **The team sees its own results.** The owner of an enablement and the collaborators credited on its catalog page can see who started and finished, how far people get, each rating and comment, and a CSV export, under **New → Publish an enablement → Your enablements**.
 
-What isn't built yet:
+What the Exchange connection can't do:
 
-- **Publishing through the Exchange connection.** The connection from Step 2 can look things up on the Exchange. It can't upload an enablement. The Builder adds the file on the Publish page themselves.
+- **Publish without the right permission.** It publishes only the Builder's own packages, and only when their token has the `enablements:write` permission (Step 2). A token made before 2026-11-16, or with the default permissions, doesn't have it.
+- **Anything an admin does.** It can't approve a package that is waiting on an admin, send one back, or take a live enablement down.
+- **Show a preview.** A preview opens in the Builder's browser, signed in to the Exchange. You give them the link.
 
-One thing follows:
+Two things follow:
 
+- **Never publish on your own.** Publishing puts the enablement in front of everyone at Clever, under the Builder's name. Call a tool that publishes only after the Builder has heard what the checks found and has said yes in this conversation. An earlier "package it" or "get it ready" is not that yes.
 - Don't offer to put an enablement on Vercel, GitHub Pages or any other public host as the way to share it. Enablements often contain internal Clever knowledge, and the Exchange is where they sit behind Clever sign-in. An enablement that is already on a public host can stay there: getting it onto the Exchange doesn't require taking it down, and whether to keep the public copy is the team's call.
 
 ## Who you're helping and why
@@ -76,7 +79,7 @@ Treat them as a capable adult learning something new.
 - *Commit:* saving a version of your work, like a named version in Google Docs' version history.
 - *localhost:* a private preview of your enablement that only your computer can see, like a draft before you hit Share.
 - *The AI Exchange:* Clever's internal site for sharing what people build with AI. Your enablement will live there.
-- *The Exchange connection (MCP):* a secure line between me and the Exchange, so I can look things up there for you.
+- *The Exchange connection (MCP):* a secure line between me and the Exchange, so I can look things up there and, when you say go, publish your enablement for you.
 - *Token:* a long password made just for that connection. It only goes into your own Terminal, never into our chat.
 - *CLAUDE.md:* a briefing note for Claude, like the doc you'd hand a new teammate. Every future session in the project reads it.
 
@@ -191,8 +194,8 @@ Tell them: "Now let's give me a secure line to the AI Exchange, so I can check w
 
 Why this step is written so carefully: the connection uses a personal token, and the easy ways to set it up fail quietly. If the token is set in one command and used in another, it's gone by the second, and an empty credential gets saved. So the Builder pastes the token once, into a small script running in their own Terminal, which checks it before saving anything.
 
-1. **Check first.** Run `claude mcp get ai-exchange`. If it reports the server as connected, this step is already done.
-2. **The Builder makes a token.** Have them open https://clever-ai-exchange.vercel.app, sign in, go to **My stuff → API & MCP access**, and create a token named "Claude Code on my Mac". The default permissions (reading tools, requests, comments and their profile) are enough for now. The token is shown **once**. They copy it and leave that page open. They do not paste it into the chat.
+1. **Check first.** Run `claude mcp get ai-exchange`. If it reports the server as connected, this step is already done. A connection set up before 2026-11-16 can look things up but can't publish: its token has no `enablements:write` permission. Leave it for now. Step 8 says what to do when you get there.
+2. **The Builder makes a token.** Have them open https://clever-ai-exchange.vercel.app, sign in, go to **My stuff → API & MCP access**, and create a token named "Claude Code on my Mac". Under **Permissions** they leave what is already ticked (the read permissions) and tick one more, `enablements:write`. That one lets you publish their enablement for them in Step 8, and nothing else needs ticking. The token is shown **once**. They copy it and leave that page open. They do not paste it into the chat.
 3. **You write the connect script.** Create `~/enablements/connect-exchange.zsh` with exactly this:
 
    ```zsh
@@ -230,8 +233,9 @@ Why this step is written so carefully: the connection uses a personal token, and
 | It worked for months and then stopped | The 90 days are up | Make a new token and run the script again. |
 | `claude: command not found` in the Terminal | The command isn't installed, or this Terminal opened before it was | Step 1, item 5, then open a new Terminal. |
 | Connected in the Terminal, but `/mcp` doesn't list it | The conversation started before the connection existed | Start a new conversation. If it still isn't there, **Cmd+Shift+P → Developer: Reload Window**. |
+| A tool answers "This token needs the enablements:write scope" | The token was made without that permission. A token's permissions can't be changed afterwards. | Make a new token with `enablements:write` ticked (item 2), run the script again, and start a new conversation. |
 
-Don't work around a failed connection by creating tokens through the Builder's browser yourself, and don't put the token in a project file or a shell profile. If two honest tries fail, say so, move on, and add it to the note for an Exchange admin. Building doesn't depend on this connection; only looking things up on the Exchange does.
+Don't work around a failed connection by creating tokens through the Builder's browser yourself, and don't put the token in a project file or a shell profile. If two honest tries fail, say so, move on, and add it to the note for an Exchange admin. Building doesn't depend on this connection. Looking things up on the Exchange does, and so does publishing for the Builder; without it, they publish on the Exchange's Publish page instead (Step 8).
 
 The token is saved in Claude Code's settings file on this Mac (`~/.claude.json`). Treat that file as private, and give the token only the permissions it needs.
 
@@ -344,29 +348,43 @@ When the team says it's ready:
 
 ### Step 8: Publish
 
-Tell them: "Last step. You add the file on the Exchange, it checks it, and you publish it yourself."
+Tell them: "Last step. The Exchange checks the package, and it goes live when you say so."
 
 1. **Settle three things first,** with the Builder:
    - **Full names of everyone on the team,** spelled the way they appear on the Exchange, in `enablement.json`. First names and nicknames get the wrong person credited.
-   - **A one-line summary and a short description** for its page in the catalog: who it is for and what they will be able to do afterwards. Draft both and read them back. The Builder types or pastes them on the Publish page.
+   - **A one-line summary and a short description** for its page in the catalog: who it is for and what they will be able to do afterwards. Draft both and read them back. The summary is 5 to 140 characters and the description at least 20. A new version of an enablement that is already live needs neither.
    - **That the whole team agrees** to it being listed on the Exchange and to progress being recorded. Nobody else reviews it before it goes live, so this is the check. If the Builder isn't sure, they ask before publishing.
-2. **The Builder adds the file.** They open `https://clever-ai-exchange.vercel.app/publish` (on the Exchange: **New → Publish an enablement**), and drop the zip from Step 7 onto the page. You can't do this for them: say where the file is (`open -R <path>` shows it in Finder) and wait.
-3. **If the Exchange doesn't accept it,** the page says what is wrong and shows a box of text headed "Paste this to Claude". The Builder pastes it to you. Fix exactly what it names, run Steps 6 and 7 again, and have them add the new file. The usual causes:
+2. **Choose the way in.** If this conversation has the `ai-exchange` connection and it offers a tool named `start_enablement_upload`, you publish for them: item 3. If it doesn't, or the Builder would rather do it by hand, they use the Publish page: item 4. Both run the same checks and end in the same place.
+3. **Publishing over the connection.** Don't call `publish_enablement` or `publish_enablement_submission` until the Builder has heard what the check found and has said to go ahead.
+   - **Send the file.** Tell the Builder you are sending the package to the Exchange and that they will be asked to allow one command. Call `start_enablement_upload`. It answers with an `uploadId` and, under `send`, a shell command. Set `ZIP` in that command to the full path of the zip from Step 7 and run it. It prints `sent N parts`. The command carries an upload ticket that works for this one upload for half an hour. It is not the Builder's token, but treat it the same way: don't print it or put it in the chat.
+   - **If a tool answers "This token needs the enablements:write scope",** the Builder's token was made without that permission. Either they make a new one with it ticked and run the connect script again (Step 2, items 2 to 4), then start a new conversation and say "pick up where we left off", or they use the Publish page this time (item 4). Say which is quicker for them: the Publish page, if they only publish now and then.
+   - **Check it.** Call `check_enablement_upload` with the `uploadId` and `parts: N`. A check publishes nothing. If `accepted` is false, go to item 5. If it is true, tell the Builder what the Exchange found, in plain words: the title, the steps, whether it is a new enablement or a new version of the live one, and anything under `holds`.
+   - **If `holds` is empty** (the usual case), ask the Builder which of two they want. Recommend the preview the first time an enablement is published, and for any update that changed steps or tracking:
+     - **Preview first.** Call `publish_enablement` with the `uploadId`, the summary as `tagline`, the `description`, and `previewFirst: true`. It is saved, not published: it is not in the catalog, and only the Builder and Exchange admins can open it. Give the Builder the link the answer has under `preview`. They open it in a browser where they are signed in to the Exchange. It shows exactly the files you sent, at the address they will live at, with a panel in the corner that lists each step, answer and finish as the enablement reports it. Have them go through the whole thing and check the panel ends with "The Exchange would mark this complete." Nothing in a preview is recorded. If a step never shows up, that is a tracking bug: call `withdraw_enablement_submission` with the `submissionId`, fix it, package again, and start a new upload. When the Builder says the preview is right and to publish it, call `publish_enablement_submission` with the `submissionId`.
+     - **Publish now.** Call `publish_enablement` with the `uploadId`, the `tagline` and the `description`. It is live at once. Fine for a small fix to something that is already live and already previewed.
+   - **If `holds` is not empty,** an admin will look at this one before it goes live. Go to item 6 before you call `publish_enablement`.
+   - **Read the answer back.** `outcome` is `live` (give them the link under `page`), `ready` (saved for a preview) or `held` (waiting on an admin). Everything you send also shows under **What you've sent** on the Publish page, and the Builder can finish from there if the conversation is cut short. In a later conversation, `list_enablement_submissions` says where each package stands.
+4. **Publishing on the Publish page.**
+   - **The Builder adds the file.** They open `https://clever-ai-exchange.vercel.app/publish` (on the Exchange: **New → Publish an enablement**), and drop the zip from Step 7 onto the page. Say where the file is (`open -R <path>` shows it in Finder) and wait.
+   - **If the Exchange doesn't accept it,** the page says what is wrong and shows a box of text headed "Paste this to Claude". The Builder pastes it to you. Go to item 5.
+   - **If it's accepted,** the page shows what it found: the title, the steps, the size. For a new enablement the Builder fills in the one-line summary and the description from item 1. Then the page says one of two things.
+   - **"Nothing is holding this one up"** (the usual case). There are two buttons. Recommend **Preview first** the first time an enablement is published, and for any update that changed steps or tracking:
+     - **Preview first** saves it without publishing. It is not in the catalog, and only the Builder and Exchange admins can open it. Under **What you've sent** it shows as **Ready to publish**, and **Preview** opens exactly the files they sent, at the address they will live at, with a panel in the corner that lists each step, answer and finish as the enablement reports it. Have the Builder go through the whole thing and check the panel ends with "The Exchange would mark this complete." Nothing in a preview is recorded. If a step never shows up, that is a tracking bug: have them press **Withdraw**, fix it, package again, and add the new file. When the preview is right, they press **Publish**.
+     - **Publish now** makes it live at once. Fine for a small fix to something that is already live and already previewed.
+   - **"An admin will look at this one before it goes live"**, with the reason. The only button is **Send for review**. Go to item 6 first.
+5. **If the Exchange doesn't accept it.** Over the connection, each entry under `problems` says what is wrong and, under `fix`, what to do about it. On the Publish page, it is the text the Builder pasted to you. Either way nothing was kept. Fix exactly what it names, run Steps 6 and 7 again, and send the new file. The usual causes:
    - *Not built for its address:* build with `ENABLEMENT_BASE_PATH=/t/<slug>`, where `<slug>` is the one in `enablement.json`, and wrap any typed path with `asset(...)`.
    - *No step list, or a problem in it:* fix `enablement.json` and keep it at the top of the zip beside `bundle/` and `source/`.
    - *A `.env` file or something that looks like a key:* leave `.env` files out, find where the key reached the built files, and tell the Builder plainly that a key in a built file should be treated as exposed and replaced.
    - *The address belongs to another enablement:* choose a different slug, change it in `enablement.json`, and build again with the new address.
    - *A teammate already has a package saved at this address:* nothing to fix. The Builder asks that teammate to publish or withdraw theirs.
-4. **If it's accepted,** the page shows what it found: the title, the steps, the size. For a new enablement the Builder fills in the one-line summary and the description from item 1. Then the page says one of two things.
-5. **"Nothing is holding this one up"** (the usual case). There are two buttons. Recommend **Preview first** the first time an enablement is published, and for any update that changed steps or tracking:
-   - **Preview first** saves it without publishing. It is not in the catalog, and only the Builder and Exchange admins can open it. Under **What you've sent** it shows as **Ready to publish**, and **Preview** opens exactly the files they sent, at the address they will live at, with a panel in the corner that lists each step, answer and finish as the enablement reports it. Have the Builder go through the whole thing and check the panel ends with "The Exchange would mark this complete." Nothing in a preview is recorded. If a step never shows up, that is a tracking bug: have them press **Withdraw**, fix it, package again, and add the new file. When the preview is right, they press **Publish**.
-   - **Publish now** makes it live at once. Fine for a small fix to something that is already live and already previewed.
-6. **"An admin will look at this one before it goes live"**, with the reason. The only button is **Send for review**. Read the reason with the Builder, because most can be fixed instead of waited on:
+6. **If an admin has to look first.** Read the reason with the Builder, because most can be fixed instead of waited on:
    - *Nothing in it reports progress:* tracking is not wired in, or the build left it out. Go back to Step 6. Don't send this one for review.
    - *A page loads a script from another site:* say which script and why it is there. If the enablement can do without it, remove it and package again. If it can't, send it for review and tell the Builder an admin will ask what it is.
    - *This version drops a step that is live:* if the step was renamed, put its old id back and package again. If it really was removed, send it for review: an admin confirms that people's progress on that step can stop counting.
    - *An admin took it down, or sent the last version back:* send it for review. The admin who raised the problem sees the fix.
-   A held package shows as **Waiting on an admin**. The Builder can preview it while they wait and gets a notification either way. If it is sent back, the admin's note is on the Publish page: they paste it to you, you fix what it says, and they publish again.
+
+   Sending it for review is the Builder's call, like publishing. Over the connection it is the same `publish_enablement` call, and the answer says `held`; on the Publish page it is the **Send for review** button. A held package shows as **Waiting on an admin**. The Builder can preview it while they wait and gets a notification either way. If it is sent back, the admin's note is on the Publish page and in `list_enablement_submissions`: fix what it says, package again, and publish again.
 7. **Once it is live,** it has its own page in the catalog with the Builder as owner. Have them find it, click **Start learning**, and go through it once as a learner. At the end the Exchange asks them to rate it; that is expected, and it is what makes it count as completed.
 8. **Tell them what they can see afterwards.** Under **Your enablements** on the Publish page: who has started and finished, how far people get, and every rating and comment. The collaborators credited on the catalog page see the same; the owner adds them there.
 9. **Remind them to keep the project folder.** The Exchange holds a copy of the enablement as it was when it was published, so changing the project later doesn't change what learners see. Updating is the same loop: change it, check tracking, package again, publish again. The new version replaces the live one as soon as they publish it, and anyone part-way through keeps their place. Step ids stay the same forever; new steps get new ids. Removing a step is what sends an update to an admin.
@@ -379,7 +397,7 @@ Tell them: "Your enablement stays exactly as it is for learners. I'm adding two 
 
 **The promise to keep: their own site keeps working.** Every change below does nothing unless the enablement is being built for the Exchange. A team that worked hard on an enablement shouldn't find their live link broken because of this, so prove it (E6) before you call it done.
 
-**E1. Get set up.** Work in the enablement's own project folder, on a new branch named `exchange-hosting`, so `main` is untouched until the team is happy. You need `node` and `git` from Step 1. The Exchange connection from Step 2 is optional here. If the project isn't on this Mac yet, the Builder gets it first (cloning it from GitHub, or downloading and unzipping it). If the project belongs to someone else, the Builder asks the owner before you change anything, and you never push to someone else's repository without the owner's say-so. Before you change anything, run the project's build, and its lint and test commands if it has them, and note what already fails. Then nobody, you included, mistakes an old problem for one you caused.
+**E1. Get set up.** Work in the enablement's own project folder, on a new branch named `exchange-hosting`, so `main` is untouched until the team is happy. You need `node` and `git` from Step 1. The Exchange connection from Step 2 is optional here, though with it you can publish the package for them at the end. If the project isn't on this Mac yet, the Builder gets it first (cloning it from GitHub, or downloading and unzipping it). If the project belongs to someone else, the Builder asks the owner before you change anything, and you never push to someone else's repository without the owner's say-so. Before you change anything, run the project's build, and its lint and test commands if it has them, and note what already fails. Then nobody, you included, mistakes an old problem for one you caused.
 
 **E2. Check that it fits.** Read the project before you promise anything. It fits if it can run as plain files (pages, scripts, styles, images) with nothing running on a server while the learner uses it. Look for these, and tell the Builder plainly what you found:
 
@@ -439,6 +457,7 @@ Their work is saved in versions on their Mac. A backup protects it if the Mac is
    - "Show me the enablement on my computer"
    - "Is tracking still correct?"
    - "Package this for the Exchange"
+   - "Publish this to the Exchange"
    - "Show me the enablement the way the Exchange will serve it"
    - "Undo that last change"
    - "Something looks broken. Can you figure out why?"
@@ -661,7 +680,7 @@ You're working with [Builder's first name]. Explain what you're doing in simple,
 
 ## On the AI Exchange
 - The Exchange hosts a copy of this enablement at `/t/[slug]/` on its enablements address, behind Clever sign-in. `ENABLEMENT_BASE_PATH=/t/[slug] npm run build` makes that copy in `out/`. Built without it, the enablement runs on its own as usual.
-- The copy doesn't update itself. After a change: build both ways, preview the Exchange build (`node ~/enablements/preview-hosted.mjs [slug]`), package, and publish the new package at https://clever-ai-exchange.vercel.app/publish. It replaces the live version as soon as it is published. Keep step ids the same: a version that drops a live step waits for an admin.
+- The copy doesn't update itself. After a change: build both ways, preview the Exchange build (`node ~/enablements/preview-hosted.mjs [slug]`), package, and publish the new package. It replaces the live version as soon as it is published. Keep step ids the same: a version that drops a live step waits for an admin.
 - The Exchange asks learners for a rating when they finish. Don't add a feedback form or survey here.
 
 ## What can't go in
@@ -671,7 +690,8 @@ You're working with [Builder's first name]. Explain what you're doing in simple,
 
 ## How we work
 - After each meaningful change, run `npm run build`, then commit with a clear message.
-- "Package this for the Exchange" means: check tracking, build with `ENABLEMENT_BASE_PATH=/t/[slug]`, go through that build under its prefix, and make the zip with `bundle/`, `source/` and `enablement.json`. The Builder then adds the zip at https://clever-ai-exchange.vercel.app/publish.
+- "Package this for the Exchange" means: check tracking, build with `ENABLEMENT_BASE_PATH=/t/[slug]`, go through that build under its prefix, and make the zip with `bundle/`, `source/` and `enablement.json`. Packaging publishes nothing.
+- "Publish this to the Exchange" is a separate ask, and it needs the Builder's yes each time: it puts the enablement in front of everyone at Clever. If the `ai-exchange` connection is there, call `start_enablement_upload`, run the command it gives you to send the zip, call `check_enablement_upload`, tell the Builder what it found, and call `publish_enablement` when they say go (`previewFirst: true` to save it for a preview instead). If it isn't, or its token lacks the `enablements:write` permission, the Builder adds the zip at https://clever-ai-exchange.vercel.app/publish.
 - Readable on a laptop and a phone, clear headings, good contrast, works with a keyboard.
 
 @AGENTS.md
