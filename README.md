@@ -13,7 +13,7 @@ Owner and author: **Katie Clarkson**. Questions go to Katie or any AI Exchange a
 - Claude Code and VS Code on your Mac
 - A secure connection between Claude and the AI Exchange
 - Your own enablement project, which you change by asking Claude in plain English
-- A packaged enablement, ready for an Exchange admin to publish
+- A packaged enablement, ready for you to publish on the Exchange
 
 ## Step 1: Download the guide
 
@@ -43,9 +43,9 @@ If you built an enablement at Campfire, at a hackathon, or on your own, you don'
 
 If you already use Claude Code, do this with Claude Code open in your enablement's project folder. If you don't, Claude gets you there.
 
-Claude checks that the enablement fits, makes the changes on a separate branch, proves both versions still build, and writes the message for you to send to an Exchange admin.
+Claude checks that the enablement fits, makes the changes on a separate branch, proves both versions still build, and packages it. You then add the package on the Exchange's Publish page.
 
-Before you send it, have these ready: the full name of everyone on the team as it appears on the Exchange, who should own the catalog entry, and the team's OK for it to be listed and tracked. Anyone you want credited needs to have signed in to the Exchange at least once.
+Before you publish, have these ready: the full name of everyone on the team as it appears on the Exchange, and the team's OK for it to be listed and tracked. You will be its owner; add your collaborators on its catalog page afterwards, and they can see its results too.
 
 ## Coming back later
 
@@ -53,8 +53,9 @@ Open Claude Code in your enablement's project folder and say what you want to do
 
 ## Good to know
 
-- **Publishing.** The AI Exchange hosts enablements, and publishing is done by hand for now: Claude packages your enablement, you send it to an Exchange admin, and they add it to the Exchange under your name. It isn't instant. There is no upload page yet; the top of the guide says what is live and will be updated when that changes.
-- **What the Exchange records.** Which steps each learner finishes, their answers, how long each step takes, and when they complete it. Exchange admins can see it, and your enablement's page on the Exchange tells learners so before they start.
-- **Updates.** The Exchange holds a copy of your enablement as it was when it was published. To update it, change your project, ask Claude to package it again, and send the new package.
+- **Publishing.** You publish it yourself: on the Exchange, open **New → Publish an enablement** and add the file Claude packaged. The Exchange checks it on the spot and, if something is wrong, gives you the exact words to paste to Claude. An admin previews and approves it, and then it is live in the catalog under your name.
+- **Feedback is built in.** When someone finishes, the Exchange asks them for a star rating and a comment. You don't build that yourself. You see every rating and comment under **Your enablements** on the Publish page.
+- **What the Exchange records.** Which steps each learner finishes, their answers, how long each step takes, and when they complete it. Exchange admins can see it, and so can you and the collaborators credited on your enablement. Its page on the Exchange tells learners so before they start.
+- **Updates.** The Exchange holds a copy of your enablement as it was when it was approved. To update it, change your project, ask Claude to package it again, and publish the new package. It becomes a new version once an admin approves it.
 - **What can't go in an enablement.** Real customer, district, school, student or staff data, and passwords or keys. Use realistic made-up examples.
 - **This guide is also a Claude skill.** The folder can be installed as a skill named `clever-enablement`.

@@ -19,23 +19,24 @@ Questions at any point? Ask Claude. If Claude can't answer, ask Katie Clarkson, 
 
 Read this first, because it changes what you tell the Builder at the end.
 
-**Status as of 2026-11-16: the AI Exchange hosts enablements.** Whoever changes how publishing works updates this section.
+**Status as of 2026-11-16: the AI Exchange hosts enablements, and Builders publish them themselves.** Whoever changes how publishing works updates this section.
 
 What works today:
 
+- **Publishing.** The Builder adds the package from Step 7 at **New → Publish an enablement** on the Exchange (`https://clever-ai-exchange.vercel.app/publish`). The Exchange checks it on the spot, an admin previews and approves it, and it is live. See "Step 8: Publish".
 - **Hosting.** A published enablement runs at the Exchange's enablements address, `https://clever-enablements.vercel.app/t/<slug>/`. A learner finds it in the Exchange catalog and clicks **Start learning**, and it opens already signed in. Nobody reaches an enablement without coming through the Exchange.
 - **A saved place.** Whatever the enablement keeps in `localStorage` is saved to the learner's Exchange account, so they can stop and pick it up later, on any device.
-- **Progress records.** The Exchange records which steps each learner finishes, their answers, how long each step takes, and when they complete it. Exchange admins can see that, and the enablement's page on the Exchange says so to learners before they start. The Exchange decides who has completed an enablement, from what the enablement reports.
+- **Progress records.** The Exchange records which steps each learner finishes, their answers, how long each step takes, and when they finish. The enablement's page on the Exchange says so to learners before they start.
+- **Feedback.** When a learner finishes, the Exchange itself asks them for a star rating and an optional comment, and the enablement counts as completed for them once they answer. **Don't build a feedback form, a survey or a "rate this" screen into the enablement.** It would ask people twice.
+- **The team sees its own results.** The owner of an enablement and the collaborators credited on its catalog page can see who started and finished, how far people get, each rating and comment, and a CSV export, under **New → Publish an enablement → Your enablements**.
 
 What isn't built yet:
 
-- **A Publish page.** Publishing is done by hand: the Builder hands the finished enablement to an Exchange admin, who adds it to the Exchange, lists it in the catalog under the owner's name and turns on tracking. See "Step 8: Publish". It isn't instant.
-- **Publishing through the Exchange connection.** The connection from Step 2 can look things up on the Exchange. It can't upload an enablement.
+- **Publishing through the Exchange connection.** The connection from Step 2 can look things up on the Exchange. It can't upload an enablement. The Builder adds the file on the Publish page themselves.
 
-Two things follow:
+One thing follows:
 
 - Don't offer to put an enablement on Vercel, GitHub Pages or any other public host as the way to share it. Enablements often contain internal Clever knowledge, and the Exchange is where they sit behind Clever sign-in. An enablement that is already on a public host can stay there: getting it onto the Exchange doesn't require taking it down, and whether to keep the public copy is the team's call.
-- If the Builder tells you the Exchange now has a Publish page, believe them, follow that page's instructions where they differ from this file, and mention that this file is out of date.
 
 ## Who you're helping and why
 
@@ -277,7 +278,7 @@ This is where the team spends most of its time. Work in a loop: **listen** to wh
 - Drag-and-drop sorting or matching
 - Hints the learner can reveal when stuck
 - A short knowledge check with explanations, not just a score
-- A confidence check at the start and end
+- A confidence check at the start and end (about the skill, not a rating of the enablement: the Exchange asks for that itself)
 - A one-page cheat sheet the learner can keep
 
 **Keep it to about 30 minutes.** If it's growing past that, say so kindly and help them decide what to cut or move to the cheat sheet.
@@ -315,7 +316,7 @@ Keep `enablement.json` and the app in agreement: every step in the list is repor
 
 **How the Exchange decides someone is done:** every step marked `"required": true` has been reported, and `complete()` has been called. The order doesn't matter, and reporting the same thing twice is harmless. A part the enablement lets people skip should be `"required": false`, or skipping it will leave them unfinished forever.
 
-**Answers are kept.** Whatever is passed to `enablement.answer` is stored on the learner's record for good, and Exchange admins can read it. Send which choice they made and whether it was right. Don't send free text a learner might write about themselves or a colleague unless the enablement tells them it's recorded. Keep each answer short: past about 2,000 characters the Exchange keeps only right or wrong.
+**Answers are kept.** Whatever is passed to `enablement.answer` is stored on the learner's record for good, and Exchange admins and the enablement's own team can read it. Send which choice they made and whether it was right. Don't send free text a learner might write about themselves or a colleague unless the enablement tells them it's recorded. Keep each answer short: past about 2,000 characters the Exchange keeps only right or wrong.
 
 **Which answers to report.** Report where the learner commits to a choice that has a right answer and that the team would want to see results for: knowledge checks and quizzes, at the least. Practice activities along the way (a click-through, a scenario, a simulator) are the team's call, so ask once and don't decide for them. Report every attempt, not only the last one. The record is more useful when it shows what people got wrong first.
 
@@ -343,37 +344,25 @@ When the team says it's ready:
 
 ### Step 8: Publish
 
-**If the Exchange has a Publish page** (see "What's live today"): have them open it, drag the zip onto it, and fill in the title and description. They'll see **Waiting on an admin**, then **Live**, or **Sent back** with what to fix. If it's sent back with instructions, they paste those to you; fix exactly those things, run Steps 6 and 7 again, and they upload the new file.
+Tell them: "Last step. You add the file on the Exchange, it checks it, and an admin has a look before it goes live."
 
-**If it doesn't yet,** an Exchange admin publishes it by hand. Your job is to make that a five-minute job for them.
-
-1. Tell them plainly how it works today: they hand the enablement to an Exchange admin, who adds it to the Exchange, lists it in the catalog under the owner's name, and turns on tracking. It isn't instant.
-2. Settle the facts the admin will need, with the Builder:
-   - **Full names of everyone on the team,** spelled the way they appear on the Exchange. First names and nicknames get the wrong person credited.
-   - **Who owns the catalog entry.** The owner can edit its title and description afterwards. Anyone to be credited has to have signed in to the Exchange at least once.
-   - **That the whole team agrees** to it being listed on the Exchange and to progress being recorded. If the Builder isn't sure, they ask before sending.
-3. Make sure the admin can get the enablement. Either works:
-   - **The package** from Step 7, sent as a file.
-   - **The repository,** if the project is on GitHub: the Builder adds the admin as a collaborator (a private repository stays private), and the message names the branch and the commit (`git rev-parse --short HEAD`).
-4. Write a ready-to-copy message for them to send. Don't send it yourself, even if you have a Slack or email tool.
-
-   ```
-   Hi! Our enablement "<name>" is ready for the AI Exchange.
-
-   What a learner can do after it: <learning goal>
-   Team: <full name, role> / <full name, role> / <full name, role>
-   Owner of the catalog entry: <full name>
-   Time: about <N> minutes
-   Audience: <everyone at Clever / team>
-   Steps: <N>, of which <N> are required
-   Where it is: <the package's file name, or the repository link, branch and commit>
-   Built with: ENABLEMENT_BASE_PATH=/t/<slug>
-
-   Everyone on the team is happy for it to be listed on the Exchange and for progress to be recorded.
-   ```
-
-5. **After the admin says it's live,** have the Builder check it as a learner: find it in the Exchange catalog, click **Start learning**, go through to the end, and look at the enablement's page on the Exchange afterwards. It should say they completed it. If anything is off, they tell the admin exactly what they saw.
-6. Remind them to keep the project folder. The Exchange holds a copy of the enablement as it was when it was published, so changing the project later doesn't change what learners see. Updating is the same loop: change it, check tracking, package again, send it again. Step ids stay the same forever; new steps get new ids.
+1. **Settle three things first,** with the Builder:
+   - **Full names of everyone on the team,** spelled the way they appear on the Exchange, in `enablement.json`. First names and nicknames get the wrong person credited.
+   - **A one-line summary and a short description** for its page in the catalog: who it is for and what they will be able to do afterwards. Draft both and read them back. The Builder types or pastes them on the Publish page.
+   - **That the whole team agrees** to it being listed on the Exchange and to progress being recorded. If the Builder isn't sure, they ask before publishing.
+2. **The Builder publishes it.** They open `https://clever-ai-exchange.vercel.app/publish` (on the Exchange: **New → Publish an enablement**), and drop the zip from Step 7 onto the page. You can't do this for them: say where the file is (`open -R <path>` shows it in Finder) and wait.
+3. **If the Exchange doesn't accept it,** the page says what is wrong and shows a box of text headed "Paste this to Claude". The Builder pastes it to you. Fix exactly what it names, run Steps 6 and 7 again, and have them add the new file. The usual causes:
+   - *Not built for its address:* build with `ENABLEMENT_BASE_PATH=/t/<slug>`, where `<slug>` is the one in `enablement.json`, and wrap any typed path with `asset(...)`.
+   - *No step list, or a problem in it:* fix `enablement.json` and keep it at the top of the zip beside `bundle/` and `source/`.
+   - *A `.env` file or something that looks like a key:* leave `.env` files out, find where the key reached the built files, and tell the Builder plainly that a key in a built file should be treated as exposed and replaced.
+   - *The address belongs to another enablement:* choose a different slug, change it in `enablement.json`, and build again with the new address.
+4. **If it's accepted,** the page shows what it found: the title, the steps, the size. For a new enablement the Builder fills in the one-line summary and the description from item 1, then presses **Send for review**. It shows as **Waiting on an admin**.
+5. **Have them preview it while they wait.** **Preview** on the Publish page opens exactly the files they sent, at the address they will live at, with a panel in the corner that lists each step, answer and finish as the enablement reports it. Have the Builder go through the whole thing and check the panel ends with "The Exchange would mark this complete." Nothing in a preview is recorded. If a step never shows up, that is a tracking bug: fix it, package again, and publish again, which replaces the one that is waiting.
+6. **Then an admin decides.** Nobody can approve their own submission, admins included. The Builder gets a notification either way:
+   - **Live:** it has its own page in the catalog, with the Builder as owner. Have them find it, click **Start learning**, and go through it once as a learner. At the end the Exchange asks them to rate it; that is expected, and it is what makes it count as completed.
+   - **Sent back:** the admin's note is on the Publish page. They paste it to you. Fix what it says, package again, publish again.
+7. **Tell them what they can see afterwards.** Under **Your enablements** on the Publish page: who has started and finished, how far people get, and every rating and comment. The collaborators credited on the catalog page see the same; the owner adds them there.
+8. **Remind them to keep the project folder.** The Exchange holds a copy of the enablement as it was when it was approved, so changing the project later doesn't change what learners see. Updating is the same loop: change it, check tracking, package again, publish again. It becomes a new version when an admin approves it, and learners keep getting the current one until then. Step ids stay the same forever; new steps get new ids.
 
 ### Bringing an existing enablement to the Exchange
 
@@ -665,7 +654,8 @@ You're working with [Builder's first name]. Explain what you're doing in simple,
 
 ## On the AI Exchange
 - The Exchange hosts a copy of this enablement at `/t/[slug]/` on its enablements address, behind Clever sign-in. `ENABLEMENT_BASE_PATH=/t/[slug] npm run build` makes that copy in `out/`. Built without it, the enablement runs on its own as usual.
-- The copy doesn't update itself. After a change: build both ways, preview the Exchange build (`node ~/enablements/preview-hosted.mjs [slug]`), package, and send it to an Exchange admin.
+- The copy doesn't update itself. After a change: build both ways, preview the Exchange build (`node ~/enablements/preview-hosted.mjs [slug]`), package, and publish the new package at https://clever-ai-exchange.vercel.app/publish. It becomes a new version once an admin approves it.
+- The Exchange asks learners for a rating when they finish. Don't add a feedback form or survey here.
 
 ## What can't go in
 - Real customer, district, school, student or staff data. Use realistic made-up examples.
@@ -674,7 +664,7 @@ You're working with [Builder's first name]. Explain what you're doing in simple,
 
 ## How we work
 - After each meaningful change, run `npm run build`, then commit with a clear message.
-- "Package this for the Exchange" means: check tracking, build with `ENABLEMENT_BASE_PATH=/t/[slug]`, go through that build under its prefix, and make the zip with `bundle/`, `source/` and `enablement.json`.
+- "Package this for the Exchange" means: check tracking, build with `ENABLEMENT_BASE_PATH=/t/[slug]`, go through that build under its prefix, and make the zip with `bundle/`, `source/` and `enablement.json`. The Builder then adds the zip at https://clever-ai-exchange.vercel.app/publish.
 - Readable on a laptop and a phone, clear headings, good contrast, works with a keyboard.
 
 @AGENTS.md
