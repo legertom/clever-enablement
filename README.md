@@ -47,7 +47,7 @@ It is live as soon as you publish it. Nobody has to approve it. An admin looks f
 - **You can update what you own.** The Exchange takes a new version from an enablement's owner and from the collaborators credited on its catalog page. Yours are listed under **Your enablements** on the Publish page.
 - **An update replaces the live version at once.** Anyone part-way through keeps their place.
 - **GitHub is required.** Every enablement's project is kept in a private GitHub repository, so it isn't only on one Mac and a teammate can pick it up. No account yet? Claude helps you make one. It's free.
-- **Letting Claude publish** needs a token with the `enablements:write` permission, and works only in VS Code: the Claude desktop app at Clever does not allow the connection. Claude walks you through it if you want it.
+- **Letting Claude publish** needs the Exchange connection, made by signing in and ticking the `enablements:write` permission, and works only in VS Code: the Claude desktop app at Clever does not allow the connection. Claude walks you through it if you want it.
 - **Feedback is built in.** When someone finishes, the Exchange asks them for a star rating and a comment. Don't build your own.
 - **What can't go in an enablement.** Real customer, district, school, student or staff data, and passwords or keys. Use realistic made-up examples.
 - **This folder is a Claude skill** named `clever-enablement`. Claude Code keeps its copy at `~/.claude/skills/clever-enablement`.
